@@ -19,6 +19,24 @@
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
+
+</head>
+
+<body class="font-sans antialiased">
+    <x-jet-banner />
+
+    <div class="min-h-screen bg-gray-100">
+        @livewire('navigation')
+
+        <!-- Page Content -->
+        <main>
+            {{ $slot }}
+        </main>
+    </div>
+
+    @stack('modals')
+
+    @livewireScripts
     <script>
         function dropdown() {
             return {
@@ -39,23 +57,6 @@
             }
         }
     </script>
-</head>
-
-<body class="font-sans antialiased">
-    <x-jet-banner />
-
-    <div class="min-h-screen bg-gray-100">
-        @livewire('navigation')
-
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
-    </div>
-
-    @stack('modals')
-
-    @livewireScripts
 </body>
 
 </html>
