@@ -1,4 +1,4 @@
-<header class="bg-trueGray-700 sticky top-0" x-data="dropdown()">
+<header class="bg-neutral-700 sticky top-0" x-data="dropdown()">
     <div class="container flex items-center h-16 justify-between md:justify-start">
         <a :class="{'bg-opacity-100 text-orange-500':open}" x-on:click="show()"
             class="categories-menu flex flex-col items-center justify-center order-last md:order-first px-6 sm:px-4 bg-white bg-opacity-25 text-white cursor-pointer font-semibold h-full">
@@ -79,12 +79,12 @@
     </div>
 
     <nav id="navigation-menu" x-show="open" :class="{'block':open, 'hidden':!open}"
-        class="bg-trueGray-700 bg-opacity-25 w-full absolute hidden">
+        class="bg-neutral-700 bg-opacity-25 w-full absolute hidden">
         <div class="container h-full  hidden sm:block">
             <div x-on:click.away="close()" class="grid grid-cols-4 h-full relative">
                 <ul class="bg-white">
                     @foreach ($categories as $category)
-                        <li class="navigation-link text-trueGray-500 hover:bg-orange-500 hover:text-white">
+                        <li class="navigation-link text-neutral-500 hover:bg-orange-500 hover:text-white">
                             <a href="" class="category-{{ $category->name }} py-2 px-4 text-sm flex items-center">
                                 <span class="flex justify-center w-9">
                                     {!! $category->icon !!}
@@ -108,7 +108,7 @@
             </div>
             <ul class="bg-white">
                 @foreach ($categories as $category)
-                    <li class="text-trueGray-500 hover:bg-orange-500 hover:text-white">
+                    <li class="text-neutral-500 hover:bg-orange-500 hover:text-white">
                         <a href="" class="py-2 px-4 text-sm flex items-center">
                             <span class="flex justify-center w-9">
                                 {!! $category->icon !!}
@@ -118,13 +118,13 @@
                     </li>
                 @endforeach
             </ul>
-            <p class="text-trueGray-500 px-6 my-2">USUARIOS</p>
+            <p class="text-neutral-500 px-6 my-2">USUARIOS</p>
 
             @livewire('cart-movil')
 
             @auth
                 <a href="{{ route('profile.show') }}"
-                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
+                    class="py-2 px-4 text-sm flex items-center text-neutral-500 hover:bg-orange-500
 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="far fa-address-card"></i>
@@ -133,7 +133,7 @@ hover:text-white">
                 </a>
                 <a href="" onclick="event.preventDefault();
     document.getElementById('logout-form').submit()"
-                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
+                    class="py-2 px-4 text-sm flex items-center text-neutral-500 hover:bg-orange-500 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-sign-out-alt"></i>
                     </span>
@@ -144,7 +144,7 @@ hover:text-white">
                 </form>
             @else
                 <a href="{{ route('login') }}"
-                    class="py-2  px-4  text-sm  flex  items-center  text-trueGray-500  hover:bg-orange-500
+                    class="py-2  px-4  text-sm  flex  items-center  text-neutral-500  hover:bg-orange-500
 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-user-circle"></i>
@@ -152,7 +152,7 @@ hover:text-white">
                     Iniciar sesión
                 </a>
                 <a href="{{ route('register') }}"
-                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
+                    class="py-2 px-4 text-sm flex items-center text-neutral-500 hover:bg-orange-500
 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-fingerprint"></i>

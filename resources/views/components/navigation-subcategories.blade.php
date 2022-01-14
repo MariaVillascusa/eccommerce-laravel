@@ -2,11 +2,11 @@
 
 <div class="grid grid-cols-4 p-4">
     <div>
-        <p class="text-lg font-bold text-center text-trueGray-500 mb-3">Subcategorías</p>
+        <p class="text-lg font-bold text-center text-neutral-500 mb-3">Subcategorías</p>
         <ul>
             @foreach ($category->subcategories as $subcategory)
             <li>
-                <a href="" class="text-trueGray-500 inline-block font-semibold py-1 px-4 hover:text-orange-500">
+                <a href="" class="text-neutral-500 inline-block font-semibold py-1 px-4 hover:text-orange-500">
                     {{ $subcategory->name }}
                 </a>
             </li>
