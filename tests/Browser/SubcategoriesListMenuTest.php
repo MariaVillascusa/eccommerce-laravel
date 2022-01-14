@@ -41,10 +41,8 @@ class SubcategoriesListMenuTest extends DuskTestCase
                 ->assertSee('Gafas')
                 ->assertDontSee('Portátiles');
 
-                // $browser->mouseover('.category-Informática')
-                // ->assertSee('Portátiles')
-                // ->assertDontsee('Gafas');
-            ;
+                $browser->mouseover('.category-Informática')
+                ->assertSee('Portátiles');
         });
     }
 }
