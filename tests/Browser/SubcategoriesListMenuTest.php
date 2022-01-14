@@ -20,29 +20,19 @@ class SubcategoriesListMenuTest extends DuskTestCase
     {
         $categories = [Category::factory()->create([
             'name' => 'Moda',
-            'slug' => 'moda-slug',
-            'icon' => 'icon'
         ]), Category::factory()->create([
             'name' => 'Informática',
-            'slug' => 'info-slug',
-            'icon' => 'icon'
         ])];
 
-        $subcategory1 = Subcategory::factory()->create([
+        Subcategory::factory()->create([
             'category_id' => $categories[1]->id,
             'name' => 'Portátiles',
-            'slug' => 'portatiles-slug'
         ]);
 
-        $subcategory2 = Subcategory::factory()->create([
+        Subcategory::factory()->create([
             'category_id' => $categories[0]->id,
             'name' => 'Gafas',
-            'slug' => 'gafas-slug'
         ]);
-
-        $categories[0]->subcategories = [$subcategory2];
-        $categories[1]->subcategories = [$subcategory1];
-
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/')

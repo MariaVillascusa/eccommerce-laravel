@@ -17,24 +17,11 @@ class ExampleTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $categories = $this->getCategories();
+        $categories = Category::factory()->create();
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                     ->assertSee('Categorías');
         });
-    }
-
-    public function getCategories()
-    {
-        return [Category::factory()->create([
-            'name' => 'Moda',
-            'slug' => 'moda-slug',
-            'icon' => 'icon'
-        ]), Category::factory()->create([
-            'name' => 'Informática',
-            'slug' => 'info-slug',
-            'icon' => 'icon'
-        ])];
     }
 }

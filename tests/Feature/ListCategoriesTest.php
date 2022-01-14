@@ -52,12 +52,8 @@ class ListCategoriesTest extends TestCase
     {
         return [Category::factory()->create([
             'name' => 'Moda',
-            'slug' => 'moda-slug',
-            'icon' => 'icon'
         ]), Category::factory()->create([
             'name' => 'Informática',
-            'slug' => 'info-slug',
-            'icon' => 'icon'
         ])];
     }
 }
