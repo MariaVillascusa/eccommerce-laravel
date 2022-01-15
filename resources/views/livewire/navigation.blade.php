@@ -1,4 +1,4 @@
-<header class="bg-neutral-700 sticky top-0" x-data="dropdown()">
+<header class="bg-neutral-700 sticky z-50 top-0" x-data="dropdown()">
     <div class="container flex items-center h-16 justify-between md:justify-start">
         <a :class="{'bg-opacity-100 text-orange-500':open}" x-on:click="show()"
             class="categories-menu flex flex-col items-center justify-center order-last md:order-first px-6 sm:px-4 bg-white bg-opacity-25 text-white cursor-pointer font-semibold h-full">
@@ -13,12 +13,12 @@
         <a href="/" class="mx-6">
             <x-jet-application-mark class="block h-9 w-auto"></x-jet-application-mark>
         </a>
-        <div class="flex-1" hidden md:block>
+        <div class="flex-1 hidden md:block">
             @livewire('search')
         </div>
 
 
-        <div class="mx-3 relative" hidden md:block>
+        <div class="mx-3 relative hidden md:block">
             @auth
                 <x-jet-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -103,7 +103,7 @@
             </div>
         </div>
         <div class="bg-white h-full overflow-y-auto">
-            <div class="container-menu bg-gray-200 py-3 mb-2">
+            <div class="container bg-gray-200 py-3 mb-2">
                 @livewire('search')
             </div>
             <ul class="bg-white">
