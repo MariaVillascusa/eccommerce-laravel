@@ -14,6 +14,7 @@ class CategoryFilter extends Component
     public $category;
     public $subcategoria;
     public $marca;
+    public $view = 'grid';
 
     public function limpiar()
     {
