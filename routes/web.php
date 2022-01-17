@@ -25,3 +25,7 @@ Route::get('products/{product}', [ProductsController::class, 'show'])->name('pro
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+Route::get('prueba', function () {
+   \Cart::destroy();
+});
