@@ -19,7 +19,6 @@ class AddCartItemColor extends Component
     {
         $this->colors = $this->product->colors;
         $this->options['image'] = Storage::url($this->product->images->first()->url);
-
     }
 
     public function updatedColorId($value)

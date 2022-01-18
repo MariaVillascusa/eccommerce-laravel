@@ -30,7 +30,12 @@
             </x-jet-secondary-button>
         </div>
         <div class="flex-1">
-            <x-button x-bind:disabled="!$wire.quantity" class="w-full" color="orange">
+            <x-button
+            x-bind:disabled="!$wire.quantity"
+            wire:click="addItem"
+            wire:loading.attr="disabled"
+            wire.target="addItem"
+            class="w-full" color="orange">
                 Agregar al carrito de compras
             </x-button>
         </div>
