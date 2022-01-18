@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
+use Gloudemans\Shoppingcart\Facades\Cart;
 
 class AddCartItemColor extends Component
 {
@@ -11,9 +13,20 @@ class AddCartItemColor extends Component
     public $qty = 1;
     public $quantity = 0;
 
+    public $options = [];
+
     public function mount()
     {
         $this->colors = $this->product->colors;
+        $this->options['image'] = Storage::url($this->product->images->first()->url);
+
+    }
+
+    public function updatedColorId($value)
+    {
+        $color = $this->product->colors->find($value);
+        $this->quantity = $color->pivot->quantity;
+        $this->options['color'] = $color->name;
     }
 
     public function decrement()
@@ -26,12 +39,20 @@ class AddCartItemColor extends Component
         $this->qty++;
     }
 
+    public function addItem(){
+        Cart::add([
+            'id' => $this->product->id,
+            'name' => $this->product->name,
+            'qty' => $this->qty,
+            'price' => $this->product->price,
+            'weight' => 550,
+            'options' => $this->options
+        ]);
+        $this->emitTo('dropdown-cart', 'render');
+    }
+
     public function render()
     {
         return view('livewire.add-cart-item-color');
-    }
-    public function updatedColorId($value)
-    {
-        $this->quantity = $this->product->colors->find($value)->pivot->quantity;
     }
 }
