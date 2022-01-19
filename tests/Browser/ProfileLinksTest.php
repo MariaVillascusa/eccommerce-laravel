@@ -23,8 +23,8 @@ class ProfileLinksTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                 ->click('.profile-dropdown')
-                ->click('@login-button')
-                ->assertPathIs('/login');
+                ->pause(500)
+                ->assertSeeLink('Iniciar sesión');
         });
     }
 
@@ -35,6 +35,7 @@ class ProfileLinksTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                 ->click('.profile-dropdown')
+                ->pause(500)
                 ->assertSeeLink('Registrarse');
         });
     }
@@ -45,11 +46,10 @@ class ProfileLinksTest extends DuskTestCase
         $user = User::factory()->create();
 
         $this->browse(function (Browser $browser) use ($user) {
-            $link = $browser->loginAs($user)->visit('/')
+            $browser->loginAs($user)->visit('/')
                 ->click('.profile-dropdown')
-                ->element('@profile-button');
-            $link->click();
-            $browser->assertPathIs('/user/profile');
+                ->pause(500)
+                ->assertSeeLink('Perfil');
         });
     }
 
@@ -61,6 +61,7 @@ class ProfileLinksTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)->visit('/')
                 ->click('.profile-dropdown')
+                ->pause(500)
                 ->assertSeeLink('Finalizar sesión');
         });
     }
