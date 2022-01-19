@@ -17,11 +17,13 @@ class ExampleTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $categories = Category::factory()->create();
+        $categories = [Category::factory()->create()];
+        $name= $categories[0]->name;
 
-        $this->browse(function (Browser $browser) {
+
+        $this->browse(function (Browser $browser) use ($name) {
             $browser->visit('/')
-                    ->assertSee('Categorías');
+                    ->assertSee(strtoupper($name));
         });
     }
 }

@@ -18,7 +18,7 @@
         </div>
 
 
-        <div class="mx-3 relative hidden md:block">
+        <div class="profile-dropdown mx-3 relative hidden md:block">
             @auth
                 <x-jet-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -35,7 +35,7 @@
                             {{ __('Manage Account') }}
                         </div>
 
-                        <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                        <x-jet-dropdown-link dusk="profile-button" href="{{ route('profile.show') }}">
                             {{ __('Profile') }}
                         </x-jet-dropdown-link>
 
@@ -60,11 +60,11 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-jet-dropdown-link href="{{ route('login') }}">
+                        <x-jet-dropdown-link dusk="login-button" href="{{ route('login') }}">
                             {{ __('Login') }}
                         </x-jet-dropdown-link>
 
-                        <x-jet-dropdown-link href="{{ route('register') }}">
+                        <x-jet-dropdown-link dusk="register-button" href="{{ route('register') }}">
                             {{ __('Register') }}
                         </x-jet-dropdown-link>
 
