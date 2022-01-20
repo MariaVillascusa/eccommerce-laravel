@@ -30,7 +30,7 @@ class ProductPageTest extends DuskTestCase
         });
     }
 
-    public function test_decrement_quantity_button_is_visible_and_disabled()
+    public function test_decrement_quantity_button_is_visible_and_disabled_due_to_the_zero_limit()
     {
         $product = $this->createProduct();
 
@@ -55,7 +55,7 @@ class ProductPageTest extends DuskTestCase
         });
     }
 
-    public function test_decrement_add_item_button_is_visible_and_enabled_if_there_is_not_color_to_choose()
+    public function test_add_item_button_is_visible_and_enabled_if_there_is_not_color_to_choose()
     {
         $product = $this->createProduct();
 
@@ -70,7 +70,25 @@ class ProductPageTest extends DuskTestCase
         });
     }
 
-    private function createProduct()
+    public function test_increment_button_limit()
+    {
+        $product = $this->createProduct(3);
+        $quantity = $product->quantity;
+        $this->browse(function (Browser $browser) use ($product, $quantity) {
+            $browser->visit('/products/' . $product->slug);
+            if ($product->subcategory->color) {
+                $browser->assertButtonDisabled('@addItem-button');
+            } else {
+                $browser->assertButtonEnabled('@increment-button');
+                for ($i = 0; $i < $quantity; $i++) {
+                    $browser->press('@increment-button');
+                }
+                $browser->assertButtonDisabled('@increment-button');
+            }
+        });
+    }
+
+    private function createProduct($quantity = 15)
     {
         $categories = Category::factory(2)->create();
 
@@ -85,6 +103,7 @@ class ProductPageTest extends DuskTestCase
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
             'brand_id' => $brand->id,
+            'quantity' => $quantity
         ]);
         Image::factory(4)->create([
             'imageable_id' => $product->id,

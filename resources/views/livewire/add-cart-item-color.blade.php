@@ -1,6 +1,6 @@
 <div x-data>
     <p class="text-xl text-gray-700">Color:</p>
-    <select wire:model="color_id" class="w-full form-control">
+    <select dusk="color-select" wire:model="color_id" class="w-full form-control">
         <option value="" selected disabled>Seleccionar un color</option>
         @foreach ($colors as $color)
             <option value="{{ $color->id }}">{{ __(ucfirst($color->name)) }}</option>
