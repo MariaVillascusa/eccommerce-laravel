@@ -37,6 +37,7 @@ class SubcategoriesListMenuTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
                 ->click('.categories-menu')
+                ->pause(500)
                 ->mouseover('.category-Moda')
                 ->assertSee('Gafas')
                 ->assertDontSee('Portátiles');

@@ -2,7 +2,9 @@
 
 namespace Tests\Browser;
 
+use App\Models\Size;
 use App\Models\Brand;
+use App\Models\Color;
 use App\Models\Image;
 use App\Models\Product;
 use Tests\DuskTestCase;
@@ -30,7 +32,7 @@ class ProductPageTest extends DuskTestCase
         });
     }
 
-    public function test_decrement_quantity_button_is_visible_and_disabled_due_to_the_zero_limit()
+    public function test_decrement_button_is_visible_and_disabled()
     {
         $product = $this->createProduct();
 
@@ -40,65 +42,117 @@ class ProductPageTest extends DuskTestCase
         });
     }
 
-    public function test_increment_quantity_button_is_visible_and_enabled_if_there_is_not_color_to_choose()
+    public function test_product_without_colors_has_increment_button_enabled()
+    {
+        $product = $this->createProduct();
+        $this->browse(function (Browser $browser) use ($product) {
+
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonEnabled('@increment-button');
+        });
+    }
+
+    public function test_product_with_colors_has_increment_button_disabled()
+    {
+        $product = $this->createProduct(5, true, false);
+
+        $this->browse(function (Browser $browser) use ($product) {
+
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonDisabled('@increment-button');
+        });
+    }
+
+    public function test_product_with_colors_and_size_has_increment_button_disabled()
+    {
+        $product = $this->createProduct(5, true, true);
+
+        $this->browse(function (Browser $browser) use ($product) {
+
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonDisabled('@increment-button');
+        });
+    }
+
+    public function test_product_without_colors_has_add_item_button_visible_and_enable()
     {
         $product = $this->createProduct();
 
         $this->browse(function (Browser $browser) use ($product) {
-            $browser->visit('/products/' . $product->slug);
 
-            if ($product->subcategory->color) {
-                $browser->assertButtonDisabled('@increment-button');
-            } else {
-                $browser->assertButtonEnabled('@increment-button');
-            }
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonEnabled('@addItem-button');
         });
     }
 
-    public function test_add_item_button_is_visible_and_enabled_if_there_is_not_color_to_choose()
+    public function test_product_with_colors_has_add_item_button_disabled()
     {
-        $product = $this->createProduct();
+        $product = $this->createProduct(5, true);
 
         $this->browse(function (Browser $browser) use ($product) {
-            $browser->visit('/products/' . $product->slug);
 
-            if ($product->subcategory->color) {
-                $browser->assertButtonDisabled('@addItem-button');
-            } else {
-                $browser->assertButtonEnabled('@addItem-button');
-            }
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonDisabled('@addItem-button');
         });
     }
 
-    public function test_increment_button_limit()
+    public function test_product_with_colors_and_size_has_add_item_button_disabled()
+    {
+        $product = $this->createProduct(5, true, true);
+
+        $this->browse(function (Browser $browser) use ($product) {
+
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonDisabled('@addItem-button');
+        });
+    }
+
+    public function test_increment_button_limit_is_product_quantity()
+    {
+        $product = $this->createProduct(2);
+        $quantity = $product->quantity;
+        $this->browse(function (Browser $browser) use ($product, $quantity) {
+            $browser->visit('/products/' . $product->slug)
+                ->assertButtonEnabled('@increment-button');
+            $browser->press('@increment-button');
+
+            $browser->press('@increment-button')
+                ->pause(3000)
+                ->assertButtonDisabled('@increment-button');
+        });
+    }
+
+    public function test_decrement_button_limit_is_zero()
     {
         $product = $this->createProduct(3);
         $quantity = $product->quantity;
         $this->browse(function (Browser $browser) use ($product, $quantity) {
             $browser->visit('/products/' . $product->slug);
-            if ($product->subcategory->color) {
-                $browser->assertButtonDisabled('@addItem-button');
-            } else {
-                $browser->assertButtonEnabled('@increment-button');
-                for ($i = 0; $i < $quantity; $i++) {
-                    $browser->press('@increment-button');
-                }
-                $browser->assertButtonDisabled('@increment-button');
-            }
+
+            $browser->assertButtonDisabled('@decrement-button')
+                ->press('@increment-button')
+                ->pause(500)
+                ->assertButtonEnabled('@decrement-button');
         });
     }
 
-    private function createProduct($quantity = 15)
+    public function test_items_without_color_has_not_color_select_neither_size_select()
+    {
+    }
+
+    private function createProduct($quantity = 15, $color = false, $size = false)
     {
         $categories = Category::factory(2)->create();
 
         $category = $categories[0];
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
+            'color' => $color,
+            'size' => $size
         ]);
 
         $brand = Brand::factory()->create();
-        $category->brands()->attach([$brand->id]);
+        $category->brands()->attach($brand->id);
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,

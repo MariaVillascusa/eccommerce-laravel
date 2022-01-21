@@ -21,36 +21,15 @@ class ProductsFilterTest extends DuskTestCase
      */
     public function test_it_filters_products_by_subcategory()
     {
-        $categories = Category::factory(2)->create();
-        $category = $categories[0];
+        $category = Category::factory()->create();
+        $subcategory1 = $this->createSubcategory($category);
+        $subcategory2 = $this->createSubcategory($category);
 
-        $subcategory1 = Subcategory::factory()->create([
-            'category_id' => $category->id,
-        ]);
-        $subcategory2 = Subcategory::factory()->create([
-            'category_id' => $category->id,
-        ]);
         $brand = Brand::factory()->create();
         $category->brands()->attach([$brand->id]);
 
-        $product1 = Product::factory()->create([
-            'subcategory_id' => $subcategory1->id,
-            'brand_id' => $brand->id,
-        ]);
-        $product2 = Product::factory()->create([
-            'subcategory_id' => $subcategory2->id,
-            'brand_id' => $brand->id,
-        ]);
-
-        Image::factory(2)->create([
-            'imageable_id' => $product1->id,
-            'imageable_type' => Product::class
-        ]);
-
-        Image::factory(2)->create([
-            'imageable_id' => $product2->id,
-            'imageable_type' => Product::class
-        ]);
+        $product1 = $this->createProduct($subcategory1, $brand);
+        $product2 = $this->createProduct($subcategory2, $brand);
 
         $this->browse(function (Browser $browser) use ($category, $product1, $product2, $subcategory1, $subcategory2) {
             $browser->visit('/categories/' . $category->slug)
@@ -58,7 +37,7 @@ class ProductsFilterTest extends DuskTestCase
                 ->assertSeeLink($subcategory1->name)
                 ->assertSeeLink($subcategory2->name)
                 ->clickLink($subcategory1->name)
-                ->pause(500)
+                ->pause(2000)
                 ->assertSeeLink($product1->name)
                 ->assertDontSeeLink($product2->name);
         });
@@ -66,34 +45,15 @@ class ProductsFilterTest extends DuskTestCase
 
     public function test_it_filters_products_by_brand()
     {
-        $categories = Category::factory(2)->create();
-        $category = $categories[0];
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-        ]);
+        $category = Category::factory()->create();
+        $subcategory = $this->createSubcategory($category);
 
         $brand1 = Brand::factory()->create();
         $brand2 = Brand::factory()->create();
         $category->brands()->attach([$brand1->id, $brand2->id]);
 
-        $product1 = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand1->id,
-        ]);
-        $product2 = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand2->id,
-        ]);
-
-        Image::factory(2)->create([
-            'imageable_id' => $product1->id,
-            'imageable_type' => Product::class
-        ]);
-
-        Image::factory(2)->create([
-            'imageable_id' => $product2->id,
-            'imageable_type' => Product::class
-        ]);
+        $product1 = $this->createProduct($subcategory, $brand1);
+        $product2 = $this->createProduct($subcategory, $brand2);
 
         $this->browse(function (Browser $browser) use ($category, $product1, $product2, $brand1, $brand2) {
             $browser->visit('/categories/' . $category->slug)
@@ -101,9 +61,29 @@ class ProductsFilterTest extends DuskTestCase
                 ->assertSeeLink($brand1->name)
                 ->assertSeeLink($brand2->name)
                 ->clickLink($brand1->name)
-                ->pause(1000)
+                ->pause(1500)
                 ->assertSeeLink($product1->name)
                 ->assertDontSeeLink($product2->name);
         });
+    }
+
+    private function createProduct($subcategory, $brand)
+    {
+        $product = Product::factory()->create([
+            'subcategory_id' => $subcategory->id,
+            'brand_id' => $brand->id,
+        ]);
+        Image::factory(2)->create([
+            'imageable_id' => $product->id,
+            'imageable_type' => Product::class
+        ]);
+        return $product;
+    }
+
+    private function createSubcategory($category){
+        $subcategory = Subcategory::factory()->create([
+            'category_id' => $category->id,
+        ]);
+        return $subcategory;
     }
 }
