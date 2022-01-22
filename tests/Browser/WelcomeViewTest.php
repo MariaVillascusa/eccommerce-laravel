@@ -28,7 +28,7 @@ class WelcomeViewTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($product, $deletedProduct) {
             $browser->visit('/')
-                ->pause(3000)
+                ->pause(500)
                 ->assertSee($product->name)
                 ->assertDontSee($deletedProduct->name);
         });

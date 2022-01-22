@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SizeFactory extends Factory
+class ColorFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,7 +14,7 @@ class SizeFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->randomElement(['Talla L', 'Talla M', 'Talla S'])
+            'name' => $this->faker->word()
         ];
     }
 }

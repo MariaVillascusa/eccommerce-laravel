@@ -61,7 +61,7 @@ class CategoryPageTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($product1, $product2 ) {
             $browser->visit('/categories/' . $product1->subcategory->category->slug)
-                ->pause(2000)
+                ->pause(500)
                 ->assertSeeLink($product1->name)
                 ->assertDontSeeLink($product2->name);
         });

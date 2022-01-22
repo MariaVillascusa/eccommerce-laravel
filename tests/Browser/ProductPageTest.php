@@ -21,24 +21,32 @@ class ProductPageTest extends DuskTestCase
     {
         $product1 = $this->createProduct();
         $product2 = $this->createProduct();
-        $urlImageProduct1 = $product1->images()->first()->url;
-        $urlImageProduct2 = $product2->images()->first()->url;
 
-        $this->browse(function (Browser $browser) use ($product1, $urlImageProduct1, $urlImageProduct2) {
-            $url = $browser->visit('/products/' . $product1->slug)
-                ->attribute('.flex-active-slide img', 'src');
-            $this->assertEquals($url, '/storage/' . $urlImageProduct1);
-            $this->assertNotEquals($url, '/storage/' . $urlImageProduct2);
+        $urlsProduct1 = collect($product1->images->pluck('url'));
+        $urlsProduct2 = collect($product2->images->pluck('url'));
+
+        $this->browse(function (Browser $browser) use ($product1, $urlsProduct1, $urlsProduct2) {
+            $browser->visit('/products/' . $product1->slug)->elements('.slides img');
+            $browser->pause(500);
+            $srcs = [];
+            for ($i = 0; $i < (count($urlsProduct1)); $i++) {
+                array_push($srcs, substr($browser->attribute('@image-product-' . $i, 'src'), 9));
+            }
+            $diff1 = $urlsProduct1->diff($srcs);
+            $diff2 = $urlsProduct2->diff($srcs);
+            $this->assertEquals($diff1->all(), []);
+            $this->assertNotEquals($diff2->all(), []);
         });
     }
 
-    public function test_decrement_button_is_visible_and_disabled()
+    public function test_decrement_and_increment_buttons_are_visible()
     {
         $product = $this->createProduct();
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/products/' . $product->slug)
-                ->assertButtonDisabled('@decrement-button');
+                ->assertVisible('@decrement-button')
+                ->assertVisible('@increment-button');
         });
     }
 
@@ -117,7 +125,7 @@ class ProductPageTest extends DuskTestCase
             $browser->press('@increment-button');
 
             $browser->press('@increment-button')
-                ->pause(3000)
+                ->pause(500)
                 ->assertButtonDisabled('@increment-button');
         });
     }
@@ -138,6 +146,52 @@ class ProductPageTest extends DuskTestCase
 
     public function test_items_without_color_has_not_color_select_neither_size_select()
     {
+        $product = $this->createProduct();
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visit('/products/' . $product->slug);
+            $browser->assertMissing('@color-select')
+                ->assertMissing('@size-select');
+        });
+    }
+
+    public function test_items_with_color_and_without_size_has_color_select_but_not_size_select()
+    {
+        $product = $this->createProduct(5, true);
+        $color = Color::factory()->create();
+        $product->colors()->attach($color->id, ['quantity' => 1]);
+
+        $this->browse(function (Browser $browser) use ($product, $color) {
+            $browser->visit('/products/' . $product->slug);
+            $browser->pause(500)
+                ->assertVisible('@color-select')
+                ->click('@color-select')
+                ->pause(500)
+                ->assertSelectHasOption('@color-select', $color->id)
+                ->assertMissing('@size-select');
+        });
+    }
+
+    public function test_items_with_color_and_size_has_color_select_and_size_select()
+    {
+        $product = $this->createProduct(5, true, true);
+        $color = Color::factory()->create();
+        $size = Size::factory()->create([
+            'product_id' => $product->id,
+        ]);
+        $color->sizes()->attach($size->id, ['quantity' => 2]);
+        $product->colors()->attach($color->id, ['quantity' => 3]);
+
+
+        $this->browse(function (Browser $browser) use ($product, $color, $size) {
+            $browser->visit('/products/' . $product->slug);
+            $browser->pause(500)
+                ->assertVisible('@color-select')
+                ->assertVisible('@size-select')
+                ->assertSelectHasOption('@size-select', $size->id)
+                ->select('size-select', $size->id)
+                ->pause(500)
+                ->assertSelectHasOption('@color-select', $color->id);
+        });
     }
 
     private function createProduct($quantity = 15, $color = false, $size = false)

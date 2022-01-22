@@ -37,7 +37,7 @@ class ProductsFilterTest extends DuskTestCase
                 ->assertSeeLink($subcategory1->name)
                 ->assertSeeLink($subcategory2->name)
                 ->clickLink($subcategory1->name)
-                ->pause(2000)
+                ->pause(1000)
                 ->assertSeeLink($product1->name)
                 ->assertDontSeeLink($product2->name);
         });
@@ -61,7 +61,7 @@ class ProductsFilterTest extends DuskTestCase
                 ->assertSeeLink($brand1->name)
                 ->assertSeeLink($brand2->name)
                 ->clickLink($brand1->name)
-                ->pause(1500)
+                ->pause(500)
                 ->assertSeeLink($product1->name)
                 ->assertDontSeeLink($product2->name);
         });
