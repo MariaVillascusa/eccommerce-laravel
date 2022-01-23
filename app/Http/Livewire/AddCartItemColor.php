@@ -26,7 +26,7 @@ class AddCartItemColor extends Component
     public function updatedColorId($value)
     {
         $color = $this->product->colors->find($value);
-        $this->quantity = $color->pivot->quantity;
+        $this->quantity = qty_available($this->product->id, $color->id);
         $this->options['color'] = $color->name;
     }
 
@@ -40,7 +40,8 @@ class AddCartItemColor extends Component
         $this->qty++;
     }
 
-    public function addItem(){
+    public function addItem()
+    {
         Cart::add([
             'id' => $this->product->id,
             'name' => $this->product->name,
@@ -49,6 +50,11 @@ class AddCartItemColor extends Component
             'weight' => 550,
             'options' => $this->options
         ]);
+
+        $this->quantity = qty_available($this->product->id, $this->color_id);
+
+        $this->reset('qty');
+
         $this->emitTo('dropdown-cart', 'render');
     }
 

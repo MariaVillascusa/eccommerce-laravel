@@ -36,7 +36,7 @@ class AddCartItemSize extends Component
     {
         $size = Size::find($this->size_id);
         $color = $size->colors->find($value);
-        $this->quantity = $color->pivot->quantity;
+        $this->quantity = qty_available($this->product->id, $color->id, $size->id);
         $this->options['color'] = $color->name;
     }
 
@@ -60,6 +60,11 @@ class AddCartItemSize extends Component
             'weight' => 550,
             'options' => $this->options
         ]);
+
+        $this->quantity = qty_available($this->product->id, $this->color_id, $this->size_id);
+
+        $this->reset('qty');
+
         $this->emitTo('dropdown-cart', 'render');
     }
 
