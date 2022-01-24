@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\CreateOrder;
 use App\Http\Livewire\ShoppingCart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SearchController;
@@ -28,10 +29,4 @@ Route::get('search', SearchController::class)->name('search');
 
 Route::get('shopping-cart', ShoppingCart::class)->name('shopping-cart');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-
-Route::get('prueba', function () {
-   \Cart::destroy();
-});
+Route::get('orders/create', CreateOrder::class)->middleware('auth')->name('orders.create');
