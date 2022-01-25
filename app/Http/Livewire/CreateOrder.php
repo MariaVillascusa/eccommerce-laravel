@@ -2,8 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\City;
+use App\Models\Order;
 use Livewire\Component;
+use App\Models\District;
 use App\Models\Department;
+use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CreateOrder extends Component
 {
@@ -11,7 +15,7 @@ class CreateOrder extends Component
     public $department_id = '', $city_id = '', $district_id = '';
     public $address, $reference;
     public $envio_type = 1;
-    public $contact, $phone;
+    public $contact, $phone, $shipping_cost;
 
     public $rules = [
         'contact' => 'required',
@@ -30,6 +34,30 @@ class CreateOrder extends Component
             $rules['reference'] = 'required';
         }
         $this->validate($rules);
+
+        $order = new Order();
+
+        $order->user_id = auth()->user()->id;
+        $order->contact = $this->contact;
+        $order->phone = $this->phone;
+        $order->envio_type = $this->envio_type;
+        $order->shipping_cost = 0;
+        $order->total = $this->shipping_cost + Cart::subtotal();
+        $order->content = Cart::content();
+
+        if ($this->envio_type == 2) {
+            $order->shipping_cost = $this->shipping_cost;
+            $order->department_id = $this->department_id;
+            $order->city_id = $this->city_id;
+            $order->district_id = $this->district_id;
+            $order->address = $this->address;
+            $order->reference = $this->reference;
+        }
+
+        $order->save();
+        Cart::destroy();
+
+        return redirect()->route('orders.payment', $order);
     }
 
     public function updatedEnvioType($value)
@@ -39,6 +67,19 @@ class CreateOrder extends Component
                 'department_id', 'city_id', 'district_id', 'address', 'reference',
             ]);
         }
+    }
+
+    public function updatedDepartmentId($value)
+    {
+        $this->cities = City::where('department_id', $value)->get();
+        $this->reset(['city_id', 'district_id']);
+    }
+    public function updatedCityId($value)
+    {
+        $city = City::find($value);
+        $this->shipping_cost = $city->cost;
+        $this->districts = District::where('city_id', $value)->get();
+        $this->reset('district_id');
     }
 
     public function mount()
