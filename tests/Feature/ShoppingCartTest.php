@@ -21,6 +21,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ShoppingCartTest extends TestCase
 {
+    use RefreshDatabase;
     /** @test */
     public function a_product_without_color_can_be_added_to_shopping_cart()
     {
@@ -110,6 +111,23 @@ class ShoppingCartTest extends TestCase
             ->assertSee($product3->name)
             ->assertSee($product4->name)
             ->assertDontSee($product1->name);
+    }
+
+    /** @test */
+    public function red_circle_number_increments_when_a_product_is_added_to_cart()
+    {
+        $product = $this->createProduct();
+        $product2 = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+
+        Livewire::test(DropdownCart::class)->assertSee(1);
+
+        Livewire::test(AddCartItem::class, ['product' => $product2])
+            ->call('addItem', $product2);
+
+        Livewire::test(DropdownCart::class)->assertSee(2);
     }
 
     private function createProduct($color = false, $size = false)
