@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Livewire\CreateOrder;
+use App\Http\Livewire\PaymentOrder;
 use App\Http\Livewire\ShoppingCart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
@@ -32,4 +33,6 @@ Route::get('shopping-cart', ShoppingCart::class)->name('shopping-cart');
 
 Route::get('orders/create', CreateOrder::class)->middleware('auth')->name('orders.create');
 
-Route::get('orders/{order}/payment', [OrderController::class, 'payment'])->name('orders.payment');
+Route::get('orders/{order}/payment', PaymentOrder::class)->name('orders.payment');
+
+Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
