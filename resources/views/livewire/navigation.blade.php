@@ -43,6 +43,10 @@
                             {{ __('My orders') }}
                         </x-jet-dropdown-link>
 
+                        <x-jet-dropdown-link href="{{ route('admin.index') }}">
+                            {{ __('Admin') }}
+                        </x-jet-dropdown-link>
+
                         <div class="border-t border-gray-100"></div>
 
                         <!-- Authentication -->
@@ -51,7 +55,7 @@
 
                             <x-jet-dropdown-link href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
-                                                                                            this.closest('form').submit();">
+                                                                                                this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-jet-dropdown-link>
                         </form>
@@ -89,7 +93,8 @@
                 <ul class="bg-white">
                     @foreach ($categories as $category)
                         <li class="navigation-link text-neutral-500 hover:bg-orange-500 hover:text-white">
-                            <a href="{{ route('categories.show', $category) }}" class="category-{{ $category->name }} py-2 px-4 text-sm flex items-center">
+                            <a href="{{ route('categories.show', $category) }}"
+                                class="category-{{ $category->name }} py-2 px-4 text-sm flex items-center">
                                 <span class="flex justify-center w-9">
                                     {!! $category->icon !!}
                                 </span>
@@ -113,7 +118,8 @@
             <ul class="bg-white">
                 @foreach ($categories as $category)
                     <li class="text-neutral-500 hover:bg-orange-500 hover:text-white">
-                        <a href="{{ route('categories.show', $category) }}" class="py-2 px-4 text-sm flex items-center">
+                        <a href="{{ route('categories.show', $category) }}"
+                            class="py-2 px-4 text-sm flex items-center">
                             <span class="flex justify-center w-9">
                                 {!! $category->icon !!}
                             </span>
@@ -136,7 +142,7 @@ hover:text-white">
                     Perfil
                 </a>
                 <a href="" onclick="event.preventDefault();
-    document.getElementById('logout-form').submit()"
+        document.getElementById('logout-form').submit()"
                     class="py-2 px-4 text-sm flex items-center text-neutral-500 hover:bg-orange-500 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-sign-out-alt"></i>
