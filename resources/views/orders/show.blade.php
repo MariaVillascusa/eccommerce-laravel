@@ -42,6 +42,11 @@
             <p class="text-gray-700 uppercase"><span class="font-semibold">Número de Orden:</span>
                 {{ $order->id }}
             </p>
+            @if ($order->status == 1)
+                <x-button-link class="ml-auto" href="{{ route('orders.payment', $order) }}">
+                    Ir a pagar
+                </x-button-link>
+            @endif
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <div class="grid grid-cols-2 gap-6">
