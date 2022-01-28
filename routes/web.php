@@ -44,3 +44,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('orders/{order}/payment', PaymentOrder::class)->name('orders.payment');
 });
+
+Route::get('prueba', function () {
+    $orders = \App\Models\Order::where('status', 1)->where('created_at', '<', now()->subMinutes(10))->get();
+    foreach ($orders as $order) {
+        $items = json_decode($order->content);
+        foreach ($items as $item) {
+            increase($item);
+        }
+        $order->status = 5;
+        $order->save();
+    }
+    return "Completado con éxito";
+});
