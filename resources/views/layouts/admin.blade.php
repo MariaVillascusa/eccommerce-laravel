@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     {{-- Fontawesome --}}
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+    {{-- Sweetalert2 --}}
+    <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.css') }}">
 
     @livewireStyles
 
@@ -23,6 +25,8 @@
     <script src="{{ mix('js/app.js') }}" defer></script>
     {{-- Ckeditor --}}
     <script src="{{ asset('vendor/ckeditor5/build/ckeditor.js') }}"></script>
+    {{-- Sweetalert2 --}}
+    <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>
 
 </head>
 
