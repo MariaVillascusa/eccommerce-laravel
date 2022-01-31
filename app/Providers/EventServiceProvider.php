@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
 use App\Listeners\MergeTheCart;
 use Illuminate\Auth\Events\Login;
+use App\Observers\ProductObserver;
 use Illuminate\Auth\Events\Logout;
 use App\Listeners\MergeTheCartLogout;
 use Illuminate\Support\Facades\Event;
@@ -37,6 +39,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Product::observe(ProductObserver::class);
     }
 }
