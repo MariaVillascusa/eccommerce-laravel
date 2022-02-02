@@ -7,13 +7,26 @@ use Livewire\Component;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class CreateCategory extends Component
 {
     use WithFileUploads;
 
-    public $brands, $categories, $image;
+    public $brands, $categories, $image, $image2;
+    public $category;
+    public $editImage;
+
     public $createForm = [
+        'name' => null,
+        'slug' => null,
+        'icon' => null,
+        'image' => null,
+        'brands' => [],
+    ];
+
+    public $editForm = [
+        'open' => false,
         'name' => null,
         'slug' => null,
         'icon' => null,
@@ -35,6 +48,11 @@ class CreateCategory extends Component
         'createForm.icon' => 'icono',
         'createForm.image' => 'imagen',
         'createForm.brands' => 'marcas',
+        'editForm.name' => 'nombre',
+        'editForm.slug' => 'slug',
+        'editForm.icon' => 'ícono',
+        'editImage' => 'imagen',
+        'editForm.brands' => 'marcas'
     ];
 
     public $listeners = ['delete'];
@@ -77,6 +95,50 @@ class CreateCategory extends Component
     public function updatedCreateFormName($value)
     {
         $this->createForm['slug'] = Str::slug($value);
+    }
+
+    public function updatedEditFormName($value)
+    {
+        $this->editForm['slug'] = Str::slug($value);
+    }
+
+    public function edit(Category $category)
+    {
+        $this->image2 = rand();
+        $this->image = rand();
+        $this->reset(['editImage']);
+        $this->resetValidation();
+        $this->category = $category;
+
+        $this->editForm['open'] = true;
+        $this->editForm['name'] = $category->name;
+        $this->editForm['slug'] = $category->slug;
+        $this->editForm['icon'] = $category->icon;
+        $this->editForm['image'] = $category->image;
+        $this->editForm['brands'] = $category->brands->pluck('id');
+    }
+
+    public function update()
+    {
+        $rules = [
+            'editForm.name' => 'required',
+            'editForm.slug' => 'required|unique:categories,slug,' . $this->category->id,
+            'editForm.icon' => 'required',
+            'editForm.brands' => 'required',
+        ];
+        if ($this->editImage) {
+            $rules['editImage'] = 'required|image|max:1024';
+        }
+        $this->validate($rules);
+
+        if ($this->editImage) {
+            Storage::disk('public')->delete($this->editForm['image']);
+            $this->editForm['image'] = $this->editImage->store('categories', 'public');
+        }
+        $this->category->update($this->editForm);
+        $this->category->brands()->sync($this->editForm['brands']);
+        $this->reset(['editForm', 'editImage']);
+        $this->getCategories();
     }
 
     public function delete(Category $category)
