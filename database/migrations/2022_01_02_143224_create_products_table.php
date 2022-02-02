@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('slug');
             $table->text('description');
             $table->float('price');
-            $table->foreignId('subcategory_id')->references('id')->on('subcategories');
+            $table->foreignId('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
             $table->foreignId('brand_id')->references('id')->on('brands');
             $table->integer('quantity')->nullable();
             $table->enum('status', [Product::BORRADOR, Product::PUBLICADO])->default(Product::BORRADOR);

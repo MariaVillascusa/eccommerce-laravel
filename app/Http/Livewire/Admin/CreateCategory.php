@@ -37,6 +37,8 @@ class CreateCategory extends Component
         'createForm.brands' => 'marcas',
     ];
 
+    public $listeners = ['delete'];
+
     public function mount()
     {
         $this->getBrands();
@@ -75,6 +77,12 @@ class CreateCategory extends Component
     public function updatedCreateFormName($value)
     {
         $this->createForm['slug'] = Str::slug($value);
+    }
+
+    public function delete(Category $category)
+    {
+        $category->delete();
+        $this->getCategories();
     }
 
     public function render()
