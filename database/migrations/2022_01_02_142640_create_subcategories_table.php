@@ -17,7 +17,6 @@ class CreateSubcategoriesTable extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('image');
             $table->string('slug');
             $table->boolean('color')->default(false);
             $table->boolean('size')->default(false);

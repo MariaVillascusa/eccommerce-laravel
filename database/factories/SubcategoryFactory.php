@@ -26,7 +26,6 @@ class SubcategoryFactory extends Factory
             'slug' => Str::slug($name),
             'color' => $color,
             'size' => $color ? $size : false,
-            'image' => 'subcategories/' . $this->faker->image(storage_path('app/public/subcategories'), 640, 480, null, false)
         ];
     }
 }
