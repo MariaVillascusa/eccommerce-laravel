@@ -19,10 +19,9 @@ class ProductPageTest extends TestCase
     public function a_product_page_is_accessible()
     {
         $categories = Category::factory(2)->create();
-        $product1 = $this->createProduct($categories);
-        $product2 = $this->createProduct($categories);
+        $product = $this->createProduct($categories);
 
-        $this->get('/products/' . $product1->slug)
+        $this->get('/products/' . $product->slug)
             ->assertStatus(200);
     }
 
@@ -30,26 +29,28 @@ class ProductPageTest extends TestCase
     public function it_displays_the_product_details()
     {
         $categories = Category::factory(2)->create();
-        $product1 = $this->createProduct($categories);
+        $product1 = $this->createProduct($categories, 10, 15.99);
         $product2 = $this->createProduct($categories);
 
         $this->get('/products/' . $product1->slug)
             ->assertStatus(200)
             ->assertSee($product1->name)
             ->assertSee($product1->price)
-            ->assertSee($product1->quantity)
+            ->assertSeeText('Stock disponible: '. $product1->quantity)
             ->assertDontSee($product2->name)
             ->assertDontSee($product2->price)
-            ->assertDontSee($product2->quantity);
+            ->assertDontSeeText('Stock disponible: ' . $product2->quantity);
     }
 
 
 
-    private function createProduct($categories)
+    private function createProduct($categories, $quantity=5, $price=10.99)
     {
         $category = $categories[0];
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
+            'color' => false,
+            'size' => false
         ]);
 
         $brand = Brand::factory()->create();
@@ -58,7 +59,8 @@ class ProductPageTest extends TestCase
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
             'brand_id' => $brand->id,
-            'quantity' => rand(1,100000)
+            'quantity' => $quantity,
+            'price' => $price
         ]);
         Image::factory(2)->create([
             'imageable_id' => $product->id,
