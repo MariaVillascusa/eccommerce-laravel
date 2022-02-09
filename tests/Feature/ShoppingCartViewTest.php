@@ -70,6 +70,40 @@ class ShoppingCartViewTest extends TestCase
         $this->assertEquals($total, Cart::subtotal());
     }
 
+    /** @test */
+    public function it_deletes_a_product()
+    {
+        $product = $this->createProduct();
+        $product2 = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+        Livewire::test(AddCartItem::class, ['product' => $product2])
+            ->call('addItem', $product2);
+
+        Livewire::test(ShoppingCart::class)
+            ->call('delete', Cart::content()->first()->rowId);
+
+        $this->assertTrue(count(Cart::content()) == 1);
+    }
+
+    /** @test */
+    public function it_deletes_the_shopping_cart()
+    {
+        $product = $this->createProduct();
+        $product2 = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+        Livewire::test(AddCartItem::class, ['product' => $product2])
+            ->call('addItem', $product2);
+
+        Livewire::test(ShoppingCart::class)
+            ->call('destroy', Cart::content()->first()->rowId);
+
+        $this->assertTrue(count(Cart::content()) == 0);
+    }
+
     private function createProduct($color = false, $size = false)
     {
         $category = Category::factory()->create();
