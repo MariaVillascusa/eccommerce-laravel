@@ -1,4 +1,4 @@
-<div class="container-menu py-8 grid lg:grid-cols-2 xl:grid-cols-5 gap-6">
+<div class="container py-8 grid lg:grid-cols-2 xl:grid-cols-5 gap-6">
     <div class="order-2 lg:order-1 lg:col-span-1 xl:col-span-3">
         <div class="bg-white rounded-lg shadow p-6">
             <div class="mb-4">
@@ -20,16 +20,16 @@
         <div x-data="{ envio_type:@entangle('envio_type')  }">
             <p class="mt-6 mb-3 text-lg text-gray-700 font-semibold">Envíos</p>
             <label class="bg-white rounded-lg shadow px-6 py-4 flex items-center mb-4 cursor-pointer">
-                <input x-model="envio_type" type="radio" name="envio_type" value="1" class="text-gray-600">
+                <input dusk="store" x-model="envio_type" type="radio" name="envio_type" value="1" class="text-gray-600">
                 <span class="ml-2 text-gray-700">Recojo en tienda (Calle Falsa 123)</span>
                 <span class="font-semibold text-gray-700 ml-auto">Gratis</span>
             </label>
             <div class="bg-white rounded-lg shadow">
                 <label class="px-6 py-4 flex items-center cursor-pointer">
-                    <input x-model="envio_type" type="radio" name="envio_type" value="2" class="text-gray-600">
+                    <input dusk="home" x-model="envio_type" type="radio" name="envio_type" value="2" class="text-gray-600">
                     <span class="ml-2 text-gray-700">Envío a domicilio</span>
                 </label>
-                <div class="px-6 pb-6 grid grid-cols-2 gap-6" :class="{ 'hidden': envio_type != 2 }">
+                <div dusk="shipping-form" class="px-6 pb-6 grid grid-cols-2 gap-6" :class="{ 'hidden': envio_type != 2 }">
                     <div>
                         <x-jet-label value="Departamento" />
                         <select class="form-control w-full" wire:model="department_id">
