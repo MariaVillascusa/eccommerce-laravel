@@ -19,7 +19,7 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ShoppingCartWithAuthenticatedUserTest extends TestCase
+class CreateOrderTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -57,6 +57,26 @@ class ShoppingCartWithAuthenticatedUserTest extends TestCase
         $this->post('/logout');
 
         $this->assertDatabaseHas('shoppingcart', ['content' => serialize($data)]);
+    }
+
+    /** @test */
+    public function it_deletes_the_shopping_cart_when_the_order_is_created()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $product = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+        $this->assertTrue(count(Cart::content()) != 0);
+
+        Livewire::test(CreateOrder::class)
+        ->set('contact','contacto')
+        ->set('phone', '611111111')
+        ->call('create_order')
+        ->assertRedirect('/orders/1/payment');
+
+        $this->assertTrue(count(Cart::content()) == 0);
     }
 
 
