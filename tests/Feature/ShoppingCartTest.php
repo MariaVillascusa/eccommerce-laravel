@@ -28,9 +28,6 @@ class ShoppingCartTest extends TestCase
         $product1 = $this->createProduct();
         $product2 = $this->createProduct();
 
-        $this->get('products/' . $product2->slug)
-            ->assertStatus(200);
-
         Livewire::test(AddCartItem::class, ['product' => $product2])
             ->call('addItem', $product2)
             ->assertStatus(200);
@@ -41,14 +38,11 @@ class ShoppingCartTest extends TestCase
     }
 
     /** @test */
-    public function a_product_with_color_and_without_size_can_be_added_to_shopping_cart()
+    public function a_product_with_color_neither_size_can_be_added_to_shopping_cart()
     {
         $product1 = $this->createProduct(true);
         $product2 = $this->createProduct(true);
         $color = $product2->colors->first();
-
-        $this->get('products/' . $product2->slug)
-            ->assertStatus(200);
 
         Livewire::test(AddCartItemColor::class, ['product' => $product2])
             ->set('options', ['color' => $color->name])
@@ -66,11 +60,8 @@ class ShoppingCartTest extends TestCase
     {
         $product1 = $this->createProduct(true, true);
         $product2 = $this->createProduct(true, true);
-        $color = $product2->colors->first();
-        $size = $color->sizes->first();
-
-        $this->get('products/' . $product2->slug)
-            ->assertStatus(200);
+        $size = $product2->sizes->first();
+        $color = $product2->sizes->first()->colors->first();
 
         Livewire::test(AddCartItemSize::class, ['product' => $product2])
             ->set('options', ['size' => $size->name, 'color' => $color->name])
@@ -79,8 +70,8 @@ class ShoppingCartTest extends TestCase
         $this->assertEquals($product2->id, Cart::content()->first()->id);
         $this->assertNotEquals($product1->id, Cart::content()->first()->id);
 
-        $this->assertTrue(Cart::content()->first()->options['color'] == $product2->colors->first()->name);
-        $this->assertTrue(Cart::content()->first()->options['size'] == $product2->colors->first()->sizes->first()->name);
+        $this->assertTrue(Cart::content()->first()->options['color'] == $product2->sizes->first()->colors->first()->name);
+        $this->assertTrue(Cart::content()->first()->options['size'] == $product2->sizes->first()->name);
     }
 
     public function test_it_shows_items_when_clicking_on_shopping_cart()
@@ -91,9 +82,9 @@ class ShoppingCartTest extends TestCase
         $product4 = $this->createProduct(true, true);
 
         $color3 = $product3->colors->first();
-        $color4 = $product4->colors->first();
+        $color4 = $product4->sizes->first()->colors->first();
 
-        $size4 = $color4->sizes->first();
+        $size4 = $product4->sizes->first();
 
         Livewire::test(AddCartItem::class, ['product' => $product2])
             ->call('addItem', $product2);
@@ -130,7 +121,36 @@ class ShoppingCartTest extends TestCase
         Livewire::test(DropdownCart::class)->assertSee(2);
     }
 
-    private function createProduct($color = false, $size = false)
+    /** @test */
+    public function it_is_not_possible_to_add_to_shopping_cart_a_higher_product_quantity_than_the_product_has()
+    {
+        $quantity=2;
+        $product = $this->createProduct(false, false, $quantity);
+        $this->get('products/' . $product->slug);
+
+        for ($i = 0; $i < 4; $i++) {
+            Livewire::test(AddCartItem::class, ['product' => $product])
+                ->call('addItem', $product);
+            $product->quantity = qty_available($product->id); // Si no establecemos la cantidad así no se sincroniza
+        }
+
+        $this->assertEquals($quantity, Cart::content()->first()->qty);
+    }
+
+    /** @test */
+    public function it_shows_quantity_product()
+    {
+        $product = $this->createProduct();
+        $product2 = $this->createProduct(false, false, 23);
+
+        $this->get('products/' . $product->slug)
+            ->assertStatus(200)
+            ->assertDontSeeText('Stock disponible: ' . $product2->quantity)
+            ->assertSeeText('Stock disponible: ' . $product->quantity);
+    }
+
+
+    private function createProduct($color = false, $size = false, $quantity = 5)
     {
         $category = Category::factory()->create();
 
@@ -146,22 +166,27 @@ class ShoppingCartTest extends TestCase
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
             'brand_id' => $brand->id,
+            'quantity' => $quantity
         ]);
+
         Image::factory()->create([
             'imageable_id' => $product->id,
             'imageable_type' => Product::class
         ]);
-        if ($color) {
+
+        if ($size && $color) {
+            $product->quantity = null;
+            $productColor = Color::factory()->create();
+            $productSize = Size::factory()->create([
+                'product_id' => $product->id
+            ]);
+            $productColor->sizes()->attach($productSize->id, ['quantity' => 1]);
+        } elseif ($color && !$size) {
+            $product->quantity = null;
             $productColor = Color::factory()->create();
             $product->colors()->attach($productColor->id, ['quantity' => 1]);
-
-            if ($size) {
-                $productSize = Size::factory()->create([
-                    'product_id' => $product->id
-                ]);
-                $productColor->sizes()->attach($productSize->id, ['quantity' => 1]);
-            }
         }
+
         return $product;
     }
 }

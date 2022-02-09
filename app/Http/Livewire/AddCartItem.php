@@ -34,6 +34,10 @@ class AddCartItem extends Component
 
     public function addItem()
     {
+        $this->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
         Cart::add([
             'id' => $this->product->id,
             'name' => $this->product->name,
@@ -48,6 +52,13 @@ class AddCartItem extends Component
         $this->reset('qty');
 
         $this->emitTo('dropdown-cart', 'render');
+    }
+
+    public function verifyQuantity()
+    {
+        if ($this->product->quantity > 0) {
+            $this->addItem();
+        }
     }
 
     public function render()
