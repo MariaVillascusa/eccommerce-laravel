@@ -32,7 +32,7 @@
                 <div dusk="shipping-form" class="px-6 pb-6 grid grid-cols-2 gap-6" :class="{ 'hidden': envio_type != 2 }">
                     <div>
                         <x-jet-label value="Departamento" />
-                        <select class="form-control w-full" wire:model="department_id">
+                        <select class="form-control w-full" wire:model="department_id" name="departments">
                             <option value="" disabled selected>Seleccione un departamento</option>
                             @foreach ($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -42,7 +42,7 @@
                     </div>
                     <div>
                         <x-jet-label value="Ciudad" />
-                        <select class="form-control w-full" wire:model="city_id">
+                        <select class="form-control w-full" wire:model="city_id" name="cities">
                             <option value="" disabled selected>Seleccione una ciudad</option>
                             @foreach ($cities as $city)
                                 <option value="{{ $city->id }}">{{ $city->name }}</option>
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                         <x-jet-label value="Distrito" />
-                        <select class="form-control w-full" wire:model="district_id">
+                        <select class="form-control w-full" wire:model="district_id" name="districts">
                             <option value="" disabled selected>Seleccione un distrito</option>
                             @foreach ($districts as $district)
                                 <option value="{{ $district->id }}">{{ $district->name }}</option>
