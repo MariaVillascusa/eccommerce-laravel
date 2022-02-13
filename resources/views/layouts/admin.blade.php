@@ -14,27 +14,12 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     {{-- Fontawesome --}}
-    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
-    {{-- Sweetalert2 --}}
-    <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.css') }}">
-    {{-- Dropzone --}}
-    {{-- <link rel="stylesheet" href="{{ asset('vendor/dropzone/dist/dropzone.css') }}"> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}"> --}}
 
     @livewireStyles
 
-
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
-    {{-- Ckeditor --}}
-    <script src="{{ asset('vendor/ckeditor5/build/ckeditor.js') }}"></script>
-    {{-- Sweetalert2 --}}
-    <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>
-    {{-- Dropzone --}}
-    {{-- <script src="{{ asset('vendor/dropzone/dist/dropzone.js') }}"></script> --}}
-
-    {{-- Dropzone --}}
-    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 </head>
 
@@ -54,6 +39,13 @@
 
         <!-- Page Content -->
         <main>
+            <i class="fa-solid fa-question-circle"></i> <!-- solid style of the question circle icon -->
+            <i class="fa-regular fa-question-circle"></i> <!-- regular style of the question circle icon -->
+            <i class="fa-light fa-question-circle"></i> <!-- light style of the question circle icon -->
+
+            <i class="fa-brands fa-facebook"></i> <!-- facebook brand icon-->
+            <i class="fa-brands fa-facebook-f"></i> <!-- facebook "f" brand icon-->
+
             {{ $slot }}
         </main>
     </div>

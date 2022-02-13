@@ -15,7 +15,9 @@
         <h1 class="text-3xl text-center font-semibold mb-8">Complete los datos para crear un producto</h1>
         <div class="mb-4" wire:ignore>
             <form action="{{ route('admin.products.files', $product) }}" method="POST" class="dropzone"
-                id="my-awesome-dropzone"></form>
+                id="my-dropzone">
+                @csrf
+            </form>
         </div>
         @if ($product->images->count())
             <section class="bg-white shadow-xl rounded-lg p-6 mb-4">
@@ -78,7 +80,8 @@
             <div class="mb-4">
                 <div wire:ignore>
                     <x-jet-label value="Descripción" />
-                    <textarea class="w-full form-control" rows="4" wire:model="product.description" x-data x-init="ClassicEditor.create($refs.miEditor)
+                    <textarea class="w-full form-control" id="editor" rows="4" wire:model="product.description" x-data
+                        x-init="ClassicEditor.create($refs.editor)
             .then(function(editor){
             editor.model.document.on('change:data', () => {
             @this.set('product.description', editor.getData())
@@ -86,7 +89,7 @@
             })
             .catch( error => {
             console.error( error );
-            } );" x-ref="miEditor">
+            } );" x-ref="editor">
                 </textarea>
                 </div>
                 <x-jet-input-error for="product.description" />
@@ -136,22 +139,6 @@
 
     @push('scripts')
         <script>
-            Dropzone.options.myAwesomeDropzone = {
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                dictDefaultMessage: "Mueva una imagen al recuadro",
-                acceptedFiles: 'image/*',
-                paramName: "file", // The name that will be used to transfer the file
-                maxFilesize: 2, // MB
-                complete: function(file) {
-                    this.removeFile(file);
-                },
-                queuecomplete: function() {
-                    Livewire.emit('refreshProduct');
-                }
-            };
-
             Livewire.on('deleteSize', sizeId => {
                 Swal.fire({
                     title: 'Are you sure?',
@@ -172,6 +159,7 @@
                     }
                 })
             })
+
             Livewire.on('errorSize', mensaje => {
                 Swal.fire({
                     icon: 'error',
