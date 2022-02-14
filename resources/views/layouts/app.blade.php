@@ -10,14 +10,11 @@
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        {{-- Fontawesome --}}
-    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
-        {{-- Glider --}}
+    {{-- Glider --}}
     <link rel="stylesheet" href="{{ asset('vendor/glider-js/glider.min.css') }}">
-        {{-- FlexSlider --}}
+    {{-- FlexSlider --}}
     <link rel="stylesheet" href="{{ asset('vendor/flex-slider/flexslider.css') }}">
 
     @livewireStyles
@@ -25,9 +22,9 @@
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
-        {{-- Glider --}}
+    {{-- Glider --}}
     <script src="{{ asset('vendor/glider-js/glider.min.js') }}"></script>
-        {{-- JQuery --}}
+    {{-- JQuery --}}
     <script src="{{ asset('vendor/flex-slider/node_modules/jquery/dist/jquery.js') }}"></script>
     {{-- FlexSlider --}}
     <script src="{{ asset('vendor/flex-slider/jquery.flexslider-min.js') }}"></script>
@@ -70,4 +67,5 @@
     </script>
     @stack('scripts')
 </body>
+
 </html>

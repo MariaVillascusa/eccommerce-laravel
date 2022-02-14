@@ -13,8 +13,6 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    {{-- Fontawesome --}}
-    {{-- <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}"> --}}
 
     @livewireStyles
 
@@ -39,13 +37,6 @@
 
         <!-- Page Content -->
         <main>
-            <i class="fa-solid fa-question-circle"></i> <!-- solid style of the question circle icon -->
-            <i class="fa-regular fa-question-circle"></i> <!-- regular style of the question circle icon -->
-            <i class="fa-light fa-question-circle"></i> <!-- light style of the question circle icon -->
-
-            <i class="fa-brands fa-facebook"></i> <!-- facebook brand icon-->
-            <i class="fa-brands fa-facebook-f"></i> <!-- facebook "f" brand icon-->
-
             {{ $slot }}
         </main>
     </div>
