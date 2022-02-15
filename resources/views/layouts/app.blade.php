@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    {{-- Glider --}}
-    <link rel="stylesheet" href="{{ asset('vendor/glider-js/glider.min.css') }}">
     {{-- FlexSlider --}}
     <link rel="stylesheet" href="{{ asset('vendor/flex-slider/flexslider.css') }}">
 
@@ -22,8 +20,6 @@
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
-    {{-- Glider --}}
-    <script src="{{ asset('vendor/glider-js/glider.min.js') }}"></script>
     {{-- JQuery --}}
     <script src="{{ asset('vendor/flex-slider/node_modules/jquery/dist/jquery.js') }}"></script>
     {{-- FlexSlider --}}

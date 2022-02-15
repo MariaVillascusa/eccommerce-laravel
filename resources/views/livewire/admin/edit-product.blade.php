@@ -16,7 +16,6 @@
         <div class="mb-4" wire:ignore>
             <form action="{{ route('admin.products.files', $product) }}" method="POST" class="dropzone"
                 id="my-dropzone">
-                @csrf
             </form>
         </div>
         @if ($product->images->count())
@@ -139,97 +138,82 @@
 
     @push('scripts')
         <script>
-            Livewire.on('deleteSize', sizeId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.emitTo('admin.size-product', 'delete', sizeId);
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
+            window.onload = () => {
+                window.myDropzone = new Dropzone("#my-dropzone", {
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    dictDefaultMessage: "Mueva una imagen al recuadro",
+                    acceptedFiles: 'image/*',
+                    paramName: "file", // The name that will be used to transfer the file
+                    maxFilesize: 2, // MB
+                    complete: function(file) {
+                        this.removeFile(file);
+                    },
+                    queuecomplete: function() {
+                        Livewire.emit('refreshProduct');
                     }
-                })
-            })
+                });
 
-            Livewire.on('errorSize', mensaje => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: mensaje,
-                }) /*  */
-            });
+                ClassicEditor
+                    .create(document.querySelector('#editor'))
+                    .then(editor => {
+                        console.log(editor);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+            const events = {
+                'deleteProduct': {
+                    component: 'admin.edit-product',
+                    method: 'delete'
+                },
+                'deleteSize': {
+                    component: 'admin.size-product',
+                    method: 'delete'
+                },
+                'deleteColor': {
+                    component: 'admin.color-product',
+                    method: 'delete'
+                },
+                'deleteColorSize': {
+                    component: 'admin.color-size',
+                    method: 'delete'
+                }
+            }
 
-            Livewire.on('deleteColor', pivot => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.emitTo('admin.color-product', 'delete', pivot);
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
-                })
-            })
+            for (const event of Object.entries(events)) {
 
-            Livewire.on('deleteColorSize', pivot => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.emitTo('admin.color-size', 'delete', pivot);
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
-                })
-            })
+                Livewire.on(event[0], elementId => {
+                    let {
+                        component,
+                        method
+                    } = event[1]
 
-            Livewire.on('deleteProduct', () => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.emitTo('admin.edit-product', 'delete');
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            (elementId) ?
+                            Livewire.emitTo(component, method, elementId): Livewire.emitTo(component, method)
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                        }
+                    })
                 })
-            })
+
+            }
         </script>
     @endpush
 

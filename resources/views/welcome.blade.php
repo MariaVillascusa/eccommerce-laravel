@@ -6,7 +6,8 @@
                     <h1 class="text-lg uppercase font-semibold text-gray-700">
                         {{ $category->name }}
                     </h1>
-                    <a href="{{ route('categories.show', $category) }}" class="text-orange-500 hover:text-orange-400 hover:underline ml-2 font-semibold">Ver
+                    <a href="{{ route('categories.show', $category) }}"
+                        class="text-orange-500 hover:text-orange-400 hover:underline ml-2 font-semibold">Ver
                         más</a>
                 </div>
 
@@ -17,47 +18,36 @@
 
     @push('scripts')
         <script>
-            Livewire.on('glider', function(id) {
-                new Glider(document.querySelector('.glider-' + id), {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    draggable: true,
-                    dots: '.glider-' + id + '~.dots',
-                    arrows: {
-                        prev: '.glider-' + id + '~.glider-prev',
-                        next: '.glider-' + id + '~.glider-next'
-                    },
-                    responsive: [{
-                            breakpoint: 640,
-                            settings: {
-                                slidesToShow: 2.5,
-                                slidesToScroll: 2,
-                            }
-                        },
-                        {
-                            breakpoint: 768,
-                            settings: {
-                                slidesToShow: 3.5,
-                                slidesToScroll: 3,
-                            }
-                        },
-                        {
-                            breakpoint: 1024,
-                            settings: {
-                                slidesToShow: 4.5,
-                                slidesToScroll: 4,
-                            }
-                        },
-                        {
-                            breakpoint: 1280,
-                            settings: {
-                                slidesToShow: 5.5,
-                                slidesToScroll: 5,
+            window.onload = () => {
+                Livewire.on('glider', function(id) {
+
+                    new Glide('.glide-' + id, {
+                        type: 'carousel',
+                        gap: 15,
+                        swipeThreshold: 10,
+                        perView: 5,
+                        perTouch: 5,
+                        breakpoints: {
+                            760: {
+                                perView: 2
+                            },
+                            880: {
+                                perView: 3
+                            },
+                            1024: {
+                                perView: 3.5
+                            },
+                            1120: {
+                                perView: 4
+                            },
+                            1250: {
+                                perView: 4.5
                             }
                         }
-                    ]
-                });
-            });
+                    }).mount()
+                })
+            }
+
         </script>
     @endpush
 
