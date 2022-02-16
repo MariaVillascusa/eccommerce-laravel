@@ -12,18 +12,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    {{-- FlexSlider --}}
-    <link rel="stylesheet" href="{{ asset('vendor/flex-slider/flexslider.css') }}">
 
+    @stack('style')
     @livewireStyles
 
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
-    {{-- JQuery --}}
-    <script src="{{ asset('vendor/flex-slider/node_modules/jquery/dist/jquery.js') }}"></script>
-    {{-- FlexSlider --}}
-    <script src="{{ asset('vendor/flex-slider/jquery.flexslider-min.js') }}"></script>
+
+
 </head>
 
 <body class="font-sans antialiased">

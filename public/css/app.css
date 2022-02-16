@@ -9239,96 +9239,6 @@ readers do not read off random characters that represent icons */
 .glide--rtl {
   direction: rtl;
 }
-
-.glide__arrows {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.5em;
-}
-
-.glide__arrow {
-  display: block;
-  z-index: 2;
-  color: white;
-  text-transform: uppercase;
-  padding: 9px 12px;
-  background-color: #404040;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 6px;
-  box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
-  text-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.1);
-  opacity: 1;
-  cursor: pointer;
-  transition: opacity 150ms ease, border 300ms ease-in-out;
-  line-height: 1;
-}
-
-.glide__arrow:focus {
-  outline: none;
-}
-
-.glide__arrow:hover {
-  border-color: white;
-  background-color: #202124;
-}
-
-.glide__arrow--left {
-  left: 2em;
-}
-
-.glide__arrow--right {
-  right: 2em;
-}
-
-.glide__arrow--disabled {
-  opacity: 0.33;
-}
-
-.glide__bullets {
-  position: relative;
-  z-index: 2;
-  bottom: 2em;
-  left: 50%;
-  display: inline-flex;
-  list-style: none;
-  transform: translateX(-50%);
-}
-
-.glide__bullet {
-  background-color: rgba(255, 255, 255, 0.5);
-  width: 9px;
-  height: 9px;
-  padding: 0;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  transition: all 300ms ease-out;
-  cursor: pointer;
-  line-height: 0;
-  box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
-  margin: 0 0.25em;
-}
-
-.glide__bullet:focus {
-  outline: none;
-}
-
-.glide__bullet:hover, .glide__bullet:focus {
-  background-color: darkgrey;
-}
-
-.glide__bullet--active {
-  background-color: darkgrey;
-}
-
-.glide--swipeable {
-  cursor: grab;
-  cursor: -webkit-grab;
-}
-
-.glide--dragging {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-}
 /*
 ! tailwindcss v3.0.8 | MIT License | https://tailwindcss.com
 *//*
@@ -10306,6 +10216,10 @@ select {
   bottom: 0px;
   left: 0px;
 }
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}
 .left-0 {
   left: 0px;
 }
@@ -10347,6 +10261,9 @@ select {
 }
 .z-50 {
   z-index: 50;
+}
+.z-10 {
+  z-index: 10;
 }
 .order-last {
   order: 9999;
@@ -10477,6 +10394,9 @@ select {
 .ml-auto {
   margin-left: auto;
 }
+.-ml-2 {
+  margin-left: -0.5rem;
+}
 .-mt-px {
   margin-top: -1px;
 }
@@ -10498,8 +10418,8 @@ select {
 .mt-12 {
   margin-top: 3rem;
 }
-.-mt-10 {
-  margin-top: -2.5rem;
+.mb-1 {
+  margin-bottom: 0.25rem;
 }
 .mr-1 {
   margin-right: 0.25rem;
@@ -10558,6 +10478,9 @@ select {
 .h-full {
   height: 100%;
 }
+.h-48 {
+  height: 12rem;
+}
 .h-80 {
   height: 20rem;
 }
@@ -10569,9 +10492,6 @@ select {
 }
 .h-2 {
   height: 0.5rem;
-}
-.h-48 {
-  height: 12rem;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -10620,6 +10540,9 @@ select {
 }
 .w-9 {
   width: 2.25rem;
+}
+.w-10\/12 {
+  width: 83.333333%;
 }
 .w-1\/3 {
   width: 33.333333%;
@@ -10753,6 +10676,9 @@ select {
 .grid-cols-5 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
+.flex-row {
+  flex-direction: row;
+}
 .flex-col {
   flex-direction: column;
 }
@@ -10809,6 +10735,11 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.75rem * var(--tw-space-x-reverse));
   margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-x-10 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(2.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(2.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 .divide-y > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-y-reverse: 0;
@@ -11415,6 +11346,9 @@ select {
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.outline {
+  outline-style: solid;
+}
 .ring-1 {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
@@ -12018,6 +11952,14 @@ select {
   .lg\:-mx-8 {
     margin-left: -2rem;
     margin-right: -2rem;
+  }
+
+  .lg\:-ml-4 {
+    margin-left: -1rem;
+  }
+
+  .lg\:-mr-4 {
+    margin-right: -1rem;
   }
 
   .lg\:flex {
