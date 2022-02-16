@@ -40,16 +40,9 @@
     <div class="mb-4">
         <div wire:ignore>
             <x-jet-label value="Descripción" />
-            <textarea class="w-full form-control" rows="4" wire:model="description" x-data x-init="ClassicEditor.create($refs.miEditor)
-        .then(function(editor){
-        editor.model.document.on('change:data', () => {
-        @this.set('description', editor.getData())
-        })
-        })
-        .catch( error => {
-        console.error( error );
-        } );" x-ref="miEditor">
-            </textarea>
+            <textarea class="w-full form-control" id="editor" rows="4" wire:model="product.description" x-data
+                x-ref="editor">
+                </textarea>
         </div>
         <x-jet-input-error for="description" />
     </div>
@@ -82,3 +75,16 @@
         </x-jet-button>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        window.onload = () => {
+            ClassicEditor
+                .create(document.querySelector('#editor'))
+                .then(editor => {})
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    </script>
+@endpush

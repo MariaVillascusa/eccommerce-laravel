@@ -80,15 +80,7 @@
                 <div wire:ignore>
                     <x-jet-label value="Descripción" />
                     <textarea class="w-full form-control" id="editor" rows="4" wire:model="product.description" x-data
-                        x-init="ClassicEditor.create($refs.editor)
-            .then(function(editor){
-            editor.model.document.on('change:data', () => {
-            @this.set('product.description', editor.getData())
-            })
-            })
-            .catch( error => {
-            console.error( error );
-            } );" x-ref="editor">
+                        x-ref="editor">
                 </textarea>
                 </div>
                 <x-jet-input-error for="product.description" />
@@ -157,9 +149,7 @@
 
                 ClassicEditor
                     .create(document.querySelector('#editor'))
-                    .then(editor => {
-                        console.log(editor);
-                    })
+                    .then(editor => {})
                     .catch(error => {
                         console.error(error);
                     });
