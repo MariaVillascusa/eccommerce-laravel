@@ -20,25 +20,25 @@
 
         @if ($products->count())
             <div
-                x-data="{columns: { image: true, name: true, price: true, category: true, brand: true, stock: true, colors: false, sizes: false, created_at: false, state: false  }, showFilter: false}">
+                x-data="{columns: { image: true, name: true, price: true, category: true, brand: true, stock: true, colors: false, sizes: false, created_at: false, state: false  }, showColumnFilters: false, showFilters: false}">
                 <table class="min-w-full divide-y divide-gray-200">
 
                     <thead class="bg-gray-50">
                         <div class="flex items-center py-3">
                             <div class="mx-10">
                                 <span>Número de productos mostrados</span>
-                                <select name="page-select" wire:model="numPages" class="form-control w-20">
+                                <select name="page-select" wire:model="productsPerPage" class="form-control w-20">
                                     <option value="5" selected>5</option>
                                     <option value="10" selected>10</option>
                                     <option value="15" selected>15</option>
                                 </select>
 
                             </div>
-                            <div class="relative right-0 px-10 font-light mt-1 cursor-pointer"
-                                x-on:click="showFilter = !showFilter">
-                                Columnas mostradas
+                            <div class="relative px-10 cursor-pointer"
+                                x-on:click="showColumnFilters = !showColumnFilters">
+                                <i class="fas fa-columns"></i> Columnas mostradas
                                 <div class="absolute bg-white rounded border shadow-md p-2 px-4 font-normal z-99"
-                                    x-show="showFilter" x-on:click.away="showFilter = false">
+                                    x-show="showColumnFilters" x-on:click.away="showColumnFilters = false">
                                     <div class="mb-2">
                                     </div>
                                     <template x-for="column in Object.keys(columns)" :key="column">
@@ -50,7 +50,6 @@
                                     </template>
                                 </div>
                             </div>
-                        </div>
 
                         <tr>
                             <th scope="col" x-show="columns.image">
@@ -164,7 +163,8 @@
                                     </div>
                                 </td>
 
-                                <td x-show="columns.created_at" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td x-show="columns.created_at"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $product->created_at }}
                                 </td>
 
@@ -192,7 +192,7 @@
         @endif
 
         @if ($products->hasPages())
-            <div class="px-6 py-4 w-2/3">
+            <div class="px-6 py-4">
                 {{ $products->links() }}
             </div>
         @endif
