@@ -28,6 +28,7 @@
         "@ckeditor/ckeditor5-build-classic": "^31.1.0",
         "@glidejs/glide": "^3.5.2",
         "dropzone": "^6.0.0-beta.2",
+        "nouislider": "^15.5.1",
         "sweetalert2": "^11.4.0",
         "swiper": "^8.0.6"
     }

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
@@ -15,7 +15,6 @@ class Product extends Model
 
     protected $fillable = ['name', 'slug', 'description', 'price', 'subcategory_id', 'brand_id', 'quantity'];
     //protected $guarded = ['id', 'created_at', 'updated_at'];
-
 
     //accesors
     public function getStockAttribute()
@@ -61,5 +60,10 @@ class Product extends Model
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function scopeFilterBy($query, QueryFilter $filters, array $data)
+    {
+        return $filters->applyto($query, $data);
     }
 }

@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
 import Glide from '@glidejs/glide';
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
+import noUiSlider from 'nouislider';
+import 'nouislider/dist/nouislider.css';
+
 
 // Alpine
 window.Alpine = Alpine;
@@ -27,3 +30,6 @@ window.Dropzone = Dropzone
 
 // SweetAlert2
 window.Swal = Swal
+
+// noUiSlider
+window.noUiSlider = noUiSlider
