@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Size;
 use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
+use App\Models\Category;
+use App\Models\Color;
+use App\Models\Subcategory;
 use Livewire\WithPagination;
 use App\Models\ProductFilter;
-use App\Models\Subcategory;
 use Illuminate\Database\Eloquent\Builder;
 
 class ShowProducts2 extends Component
@@ -24,12 +26,22 @@ class ShowProducts2 extends Component
     public $subcategory;
     public $brand;
     public $stock;
+    public $status;
+    public $from = '';
+    public $to = '';
+    public $size;
+    public $color;
+
+    public $sortField = 'name';
+    public $sortAsc = true;
 
     public $subcategories = [];
     public $brands = [];
     public $stockList;
     public $columns = ['Imagen', 'Nombre', 'Precio', 'Categoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha', 'Estado'];
     public $selectedColumns = [];
+    public $sizes = [];
+    public $colors = [];
 
 
     protected $queryString = [
@@ -37,17 +49,28 @@ class ShowProducts2 extends Component
         'category' => ['except' => ''],
         'subcategory' => ['except' => ''],
         'brand' => ['except' => ''],
-        'stock' => ['except' => '']
+        'stock' => ['except' => ''],
+        'status' => ['except' => ''],
+        'from' => ['except' => ''],
+        'to' => ['except' => ''],
+        'size' => ['except' => ''],
+        'color' => ['except' => ''],
     ];
 
     public function mount()
     {
-        $this->selectedColumns = ['Imagen', 'Nombre', 'Precio', 'Categoría', 'Marca', 'Stock', 'Colores', 'Tallas'];
+        $this->selectedColumns = ['Imagen', 'Nombre', 'Precio', 'Categoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha', 'Estado'];
         $this->min_price = Product::min('price');
         $this->max_price = Product::max('price');
         $this->getSubcategories();
         $this->getBrands();
         $this->stockList = config('stock.stock');
+        $this->statusList = [
+            'borrador' => Product::BORRADOR,
+            'publicado' => Product::PUBLICADO
+        ];
+        $this->sizes = array_unique(Size::all()->pluck('name')->all());
+        $this->colors = Color::all();
     }
 
     public function showColumn($column)
@@ -57,7 +80,7 @@ class ShowProducts2 extends Component
 
     public function clearFilters()
     {
-        $this->reset(['search', 'category', 'subcategory', 'brand', 'stock']);
+        $this->reset(['search', 'category', 'subcategory', 'brand', 'stock', 'status', 'from', 'to', 'size', 'color']);
         $this->resetPage();
     }
 
@@ -90,6 +113,19 @@ class ShowProducts2 extends Component
         })->get();
     }
 
+    public function sortBy($field)
+    {
+        if($this->sortField === $field)
+        {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
+            $this->sortAsc = true;
+        }
+
+        $this->sortField = $field;
+    }
+
+
     public function getProducts(ProductFilter $productFilter)
     {
         $products = Product::query()
@@ -100,13 +136,15 @@ class ShowProducts2 extends Component
                 'category' => $this->category,
                 'subcategory' => $this->subcategory,
                 'brand' => $this->brand,
+                'status' => $this->status,
                 'stock' => $this->stock,
+                'from' => $this->from,
+                'to' => $this->to,
+                'size' => $this->size,
+                'color' => $this->color,
+                'sort' => ['field' => $this->sortField, 'asc' => $this->sortAsc]
             ])
             ->paginate($this->productsPerPage);
-
-        // $products = $products->filter(function($product){
-        //     return $product->stock > 30;
-        // });
 
         $products->appends($productFilter->valid());
 

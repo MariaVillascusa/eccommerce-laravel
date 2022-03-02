@@ -93,31 +93,36 @@
                                 @if ($this->showColumn('Nombre'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nombre
+                                        <a wire:click.prevent="sortBy('name')" role="button" href="#">
+                                            Nombre</a>
                                 @endif
                                 </th>
                                 @if ($this->showColumn('Precio'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Precio
+                                        <a wire:click.prevent="sortBy('price')" role="button" href="#">
+                                            Precio</a>
                                 @endif
                                 </th>
                                 @if ($this->showColumn('Categoría'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Categoría
+                                        <a wire:click.prevent="sortBy('categories.name')" role="button" href="#">
+                                            Categoría</a>
                                 @endif
                                 </th>
                                 @if ($this->showColumn('Marca'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Marca
+                                        <a wire:click.prevent="sortBy('brands.name')" role="button" href="#">
+                                            Marca</a>
                                 @endif
                                 </th>
                                 @if ($this->showColumn('Stock'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Stock
+                                        <a wire:click.prevent="sortBy('products.quantity')" role="button" href="#">
+                                            Stock</a>
                                 @endif
                                 </th>
                                 @if ($this->showColumn('Colores'))
@@ -135,14 +140,16 @@
                                 @if ($this->showColumn('Fecha'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Fecha Creación
+                                        <a wire:click.prevent="sortBy('products.created_at')" role="button" href="#">
+                                            Fecha</a>
                                 @endif
 
                                 </th>
                                 @if ($this->showColumn('Estado'))
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Estado
+                                        <a wire:click.prevent="sortBy('status')" role="button" href="#">
+                                            Estado</a>
                                 @endif
                                 </th>
 
