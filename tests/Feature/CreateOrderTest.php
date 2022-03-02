@@ -15,6 +15,8 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use App\Http\Livewire\AddCartItem;
 use App\Http\Livewire\CreateOrder;
+use App\Http\Livewire\AddCartItemColor;
+use App\Http\Livewire\AddCartItemSize;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -71,12 +73,77 @@ class CreateOrderTest extends TestCase
         $this->assertTrue(count(Cart::content()) != 0);
 
         Livewire::test(CreateOrder::class)
-        ->set('contact','contacto')
-        ->set('phone', '611111111')
-        ->call('create_order')
-        ->assertRedirect('/orders/1/payment');
+            ->set('contact', 'contacto')
+            ->set('phone', '611111111')
+            ->call('create_order')
+            ->assertRedirect('/orders/1/payment');
 
         $this->assertTrue(count(Cart::content()) == 0);
+    }
+    /** @test */
+    public function it_changes_stock_when_a_product_without_color_neither_size_order_is_created()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $product = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+
+        Livewire::test(CreateOrder::class)
+            ->set('contact', 'contacto')
+            ->set('phone', '611111111')
+            ->call('create_order');
+
+        $this->assertDatabaseHas('products', [
+            'quantity' => 14
+        ]);
+    }
+    /** @test */
+    public function it_changes_stock_when_a_product_with_color_and_without_size_order_is_created()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $product = $this->createProduct(true, false);
+        $color = $product->colors->first();
+
+        Livewire::test(AddCartItemColor::class, ['product' => $product])
+            ->set('options', ['color_id' => $color->id])
+            ->call('addItem', $product);
+
+        Livewire::test(CreateOrder::class)
+            ->set('contact', 'contacto')
+            ->set('phone', '611111111')
+            ->call('create_order');
+
+        $this->assertEquals($product->stock, 0);
+        $this->assertDatabaseHas('color_product', [
+            'quantity' => 0
+        ]);
+    }
+
+    /** @test */
+    public function it_changes_stock_when_a_product_with_color_and_size_order_is_created()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $product = $this->createProduct(true, true);
+        $size = $product->sizes->first();
+        $color = $product->sizes->first()->colors->first();
+
+        Livewire::test(AddCartItemSize::class, ['product' => $product])
+            ->set('options', ['size_id' => $size->id, 'color_id' => $color->id])
+            ->call('addItem', $product);
+
+        Livewire::test(CreateOrder::class)
+            ->set('contact', 'contacto')
+            ->set('phone', '611111111')
+            ->call('create_order');
+
+        $this->assertEquals($product->stock, 0);
+        $this->assertDatabaseHas('color_size', [
+            'quantity' => 0
+        ]);
     }
 
 
@@ -109,7 +176,7 @@ class CreateOrderTest extends TestCase
             $productSize = Size::factory()->create([
                 'product_id' => $product->id
             ]);
-            $productColor->sizes()->attach($productSize->id, ['quantity' => 1]);
+            $productSize->colors()->attach($productColor->id, ['quantity' => 1]);
         } elseif ($color && !$size) {
             $product->quantity = null;
             $productColor = Color::factory()->create();

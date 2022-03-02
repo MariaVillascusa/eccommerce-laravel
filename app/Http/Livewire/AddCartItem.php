@@ -54,13 +54,6 @@ class AddCartItem extends Component
         $this->emitTo('dropdown-cart', 'render');
     }
 
-    public function verifyQuantity()
-    {
-        if ($this->product->quantity > 0) {
-            $this->addItem();
-        }
-    }
-
     public function render()
     {
         return view('livewire.add-cart-item');

@@ -11,7 +11,7 @@ function quantity($product_id, $color_id = null, $size_id = null)
     if ($size_id) {
         $size = Size::find($size_id);
         $quantity = $size->colors->find($color_id)->pivot->quantity;
-    } elseif ($color_id) {
+    } elseif ($color_id && !$size_id) {
         $quantity = $product->colors->find($color_id)->pivot->quantity;
     } else {
         $quantity = $product->quantity;

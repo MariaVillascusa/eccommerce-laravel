@@ -178,8 +178,7 @@ class ProductPageTest extends DuskTestCase
         $size = Size::factory()->create([
             'product_id' => $product->id,
         ]);
-        $color->sizes()->attach($size->id, ['quantity' => 2]);
-        $product->colors()->attach($color->id, ['quantity' => 3]);
+        $size->colors()->attach($color->id, ['quantity' => 3]);
 
 
         $this->browse(function (Browser $browser) use ($product, $color, $size) {

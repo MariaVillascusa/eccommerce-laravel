@@ -180,7 +180,7 @@ class ShoppingCartTest extends TestCase
             $productSize = Size::factory()->create([
                 'product_id' => $product->id
             ]);
-            $productColor->sizes()->attach($productSize->id, ['quantity' => 1]);
+            $productSize->colors()->attach($productColor->id, ['quantity' => 1]);
         } elseif ($color && !$size) {
             $product->quantity = null;
             $productColor = Color::factory()->create();
