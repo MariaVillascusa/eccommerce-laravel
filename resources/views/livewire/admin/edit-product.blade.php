@@ -149,7 +149,11 @@
 
                 ClassicEditor
                     .create(document.querySelector('#editor'))
-                    .then(editor => {})
+                    .then(editor => {
+                        editor.model.document.on('change:data', () => {
+                            @this.set('product.description', editor.getData())
+                        });
+                    })
                     .catch(error => {
                         console.error(error);
                     });

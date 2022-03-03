@@ -81,7 +81,11 @@
         window.onload = () => {
             ClassicEditor
                 .create(document.querySelector('#editor'))
-                .then(editor => {})
+                .then(editor => {
+                    editor.model.document.on('change:data', () => {
+                        @this.set('description', editor.getData())
+                    })
+                })
                 .catch(error => {
                     console.error(error);
                 });

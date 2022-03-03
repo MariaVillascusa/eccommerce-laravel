@@ -17,6 +17,7 @@ use App\Http\Livewire\AddCartItem;
 use App\Http\Livewire\CreateOrder;
 use App\Http\Livewire\AddCartItemColor;
 use App\Http\Livewire\AddCartItemSize;
+use App\Models\Order;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -144,6 +145,42 @@ class CreateOrderTest extends TestCase
         $this->assertDatabaseHas('color_size', [
             'quantity' => 0
         ]);
+    }
+
+    /** @test */
+    public function it_cancels_orders_over_10_mins(){
+        $this->actingAs(User::factory()->create());
+
+        $product = $this->createProduct();
+        $product2 = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+
+        Livewire::test(CreateOrder::class)
+            ->set('contact', 'contacto')
+            ->set('phone', '611111111')
+            ->call('create_order');
+
+        Livewire::test(AddCartItem::class, ['product' => $product2])
+            ->call('addItem', $product2);
+
+        Livewire::test(CreateOrder::class)
+            ->set('contact', 'contacto')
+            ->set('phone', '611111111')
+            ->call('create_order');
+
+            $order1 = Order::first();
+
+        $order1->created_at = now()->subMinutes(11);
+        $order1->save();
+
+        $this->artisan('schedule:run');
+        $order1Before = Order::where('created_at', '<', now()->subMinutes(10))->get()->first();
+        $order2Before = Order::where('created_at', '>=', now()->subMinutes(10))->get()->first();
+
+        $this->assertEquals($order1Before->status, 5);
+        $this->assertEquals($order2Before->status, 1);
     }
 
 
