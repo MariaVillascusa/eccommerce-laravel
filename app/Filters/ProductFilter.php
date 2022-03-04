@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Filters;
 
 
+use App\Models\Size;
 use App\Models\Product;
+use App\Filters\QueryFilter;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class ProductFilter extends QueryFilter
 {

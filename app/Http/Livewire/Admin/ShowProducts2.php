@@ -10,7 +10,7 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Subcategory;
 use Livewire\WithPagination;
-use App\Models\ProductFilter;
+use App\Filters\ProductFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class ShowProducts2 extends Component
