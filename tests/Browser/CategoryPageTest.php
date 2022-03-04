@@ -47,6 +47,7 @@ class CategoryPageTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($category1, $subcategory1, $subcategory2, $brands) {
             $browser->visit('/categories/' . $category1->slug)
+                ->pause(500)
                 ->assertSeeLink($subcategory1->name)
                 ->assertDontSeeLink($subcategory2->name)
                 ->assertSeeLink($brands[0]->name)
@@ -59,11 +60,11 @@ class CategoryPageTest extends DuskTestCase
         $product1 = $this->createProduct();
         $product2 = $this->createProduct();
 
-        $this->browse(function (Browser $browser) use ($product1, $product2 ) {
+        $this->browse(function (Browser $browser) use ($product1, $product2) {
             $browser->visit('/categories/' . $product1->subcategory->category->slug)
                 ->pause(500)
-                ->assertSeeLink($product1->name)
-                ->assertDontSeeLink($product2->name);
+                ->assertSeeLink(substr($product1->name, 0, 7))
+                ->assertDontSeeLink(substr($product2->name, 0, 7));
         });
     }
 
@@ -87,7 +88,8 @@ class CategoryPageTest extends DuskTestCase
         return $product;
     }
 
-    private function createSubcategory($category){
+    private function createSubcategory($category)
+    {
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
         ]);

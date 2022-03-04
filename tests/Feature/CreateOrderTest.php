@@ -84,7 +84,7 @@ class CreateOrderTest extends TestCase
 
         $listener->handle($event);
 
-        $this->assertDatabaseHas('shoppingcart', ['content' => serialize($data)]);
+        $this->assertEquals($data, Cart::content());
     }
 
     /** @test */

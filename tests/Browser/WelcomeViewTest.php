@@ -24,13 +24,13 @@ class WelcomeViewTest extends DuskTestCase
         $categories = Category::factory(2)->create();
         $category = $categories[0];
         $product = $this->createProduct($category);
-        $deletedProduct = $this->createProduct($category,Product::BORRADOR);
+        $deletedProduct = $this->createProduct($category, Product::BORRADOR);
 
         $this->browse(function (Browser $browser) use ($product, $deletedProduct) {
             $browser->visit('/')
                 ->pause(500)
-                ->assertSee($product->name)
-                ->assertDontSee($deletedProduct->name);
+                ->assertSee(substr($product->name, 0, 8))
+                ->assertDontSee(substr($deletedProduct->name, 0, 8));
         });
     }
 

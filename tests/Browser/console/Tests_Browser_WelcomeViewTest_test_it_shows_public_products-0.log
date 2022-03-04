@@ -1,0 +1,14 @@
+[
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/ecommerce.test\/js\/app.js 420:10 \"[Glide warn]: Root element must be a existing Html node\"",
+        "source": "console-api",
+        "timestamp": 1646393223266
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/ecommerce.test\/js\/app.js 1528:29 Uncaught TypeError: Cannot read properties of undefined (reading 'querySelector')",
+        "source": "javascript",
+        "timestamp": 1646393223266
+    }
+]

@@ -38,8 +38,8 @@ class ProductsFilterTest extends DuskTestCase
                 ->assertSeeLink($subcategory2->name)
                 ->clickLink($subcategory1->name)
                 ->pause(1000)
-                ->assertSeeLink($product1->name)
-                ->assertDontSeeLink($product2->name);
+                ->assertSeeLink(substr($product1->name, 0, 8))
+                ->assertDontSeeLink(substr($product2->name, 0, 8));
         });
     }
 
@@ -62,8 +62,8 @@ class ProductsFilterTest extends DuskTestCase
                 ->assertSeeLink($brand2->name)
                 ->clickLink($brand1->name)
                 ->pause(500)
-                ->assertSeeLink($product1->name)
-                ->assertDontSeeLink($product2->name);
+                ->assertSeeLink(substr($product1->name, 0, 8))
+                ->assertDontSeeLink(substr($product2->name, 0, 8));
         });
     }
 
@@ -80,7 +80,8 @@ class ProductsFilterTest extends DuskTestCase
         return $product;
     }
 
-    private function createSubcategory($category){
+    private function createSubcategory($category)
+    {
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
         ]);
