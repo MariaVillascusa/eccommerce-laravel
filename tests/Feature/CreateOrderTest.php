@@ -47,6 +47,7 @@ class CreateOrderTest extends TestCase
         Livewire::test(CreateOrder::class)->assertSee(Cart::content()->first()->name);
     }
 
+    // Este test también forma parte de la pregunta 2
     /** @test */
     public function shopping_cart_is_saved_in_database_when_a_user_logs_out()
     {
@@ -70,12 +71,19 @@ class CreateOrderTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $product = $this->createProduct();
+        $product1 = $this->createProduct();
+        $product2 = $this->createProduct();
 
-        Livewire::test(AddCartItem::class, ['product' => $product])
-            ->call('addItem', $product);
+        Livewire::test(AddCartItem::class, ['product' => $product1])
+            ->call('addItem', $product1);
+        Livewire::test(AddCartItem::class, ['product' => $product2])
+            ->call('addItem', $product2);
 
         $data = Cart::content();
+        $products = collect([]);
+        foreach (Cart::content() as $item) {
+            $products->push($item);
+        }
         $this->post('/logout');
 
         $listener = new MergeTheCart();
@@ -85,6 +93,18 @@ class CreateOrderTest extends TestCase
         $listener->handle($event);
 
         $this->assertEquals($data, Cart::content());
+
+        $actualProducts = collect([]);
+        foreach (Cart::content() as $item) {
+            $actualProducts->push($item);
+        }
+        $this->assertEquals($actualProducts[0]->name,$products[0]->name);
+        $this->assertEquals($actualProducts[0]->qty,$products[0]->qty);
+        $this->assertEquals($actualProducts[0]->price,$products[0]->price);
+        $this->assertEquals($actualProducts[1]->name,$products[1]->name);
+        $this->assertEquals($actualProducts[1]->qty,$products[1]->qty);
+        $this->assertEquals($actualProducts[1]->price,$products[1]->price);
+
     }
 
     /** @test */
