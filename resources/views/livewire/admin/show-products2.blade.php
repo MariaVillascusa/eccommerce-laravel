@@ -117,6 +117,14 @@
                                         <a wire:click.prevent="sortBy('brands.name')" role="button" href="#">
                                             Marca</a>
                                 @endif
+                            </th>
+                            @if ($this->showColumn('Venta'))
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <a wire:click.prevent="sortBy()" role="button" href="#">
+                                        Nº ventas</a>
+                            @endif
+                            </th>
                                 </th>
                                 @if ($this->showColumn('Stock'))
                                     <th scope="col"
@@ -199,6 +207,12 @@
                                     @if ($this->showColumn('Marca'))
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">{{ $product->brand->name }}</div>
+                                        </td>
+                                    @endif
+
+                                    @if ($this->showColumn('Venta'))
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ $product->sales }}</div>
                                         </td>
                                     @endif
 

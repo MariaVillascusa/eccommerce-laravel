@@ -38,7 +38,7 @@ class ShowProducts2 extends Component
     public $subcategories = [];
     public $brands = [];
     public $stockList;
-    public $columns = ['Imagen', 'Nombre', 'Precio', 'Categoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha', 'Estado'];
+    public $columns = ['Imagen', 'Nombre', 'Precio', 'Venta','Categoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha', 'Estado'];
     public $selectedColumns = [];
     public $sizes = [];
     public $colors = [];
@@ -59,7 +59,7 @@ class ShowProducts2 extends Component
 
     public function mount()
     {
-        $this->selectedColumns = ['Imagen', 'Nombre', 'Precio', 'Categoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha', 'Estado'];
+        $this->selectedColumns = ['Imagen', 'Nombre', 'Venta','Precio', 'Categoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha', 'Estado'];
         $this->min_price = Product::min('price');
         $this->max_price = Product::max('price');
         $this->getSubcategories();
