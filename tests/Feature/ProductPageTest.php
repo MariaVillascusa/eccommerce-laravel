@@ -3,23 +3,18 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Brand;
-use App\Models\Image;
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Subcategory;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\CreateData;
 
 class ProductPageTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, CreateData;
 
     /** @test */
     public function a_product_page_is_accessible()
     {
-        $categories = Category::factory(2)->create();
-        $product = $this->createProduct($categories);
+        $categories = [$this->createCategory()];
+        $product = $this->createProduct(false, false, 5, 20, $categories[0]->id);
 
         $this->get('/products/' . $product->slug)
             ->assertStatus(200);
@@ -28,44 +23,18 @@ class ProductPageTest extends TestCase
     /** @test */
     public function it_displays_the_product_details()
     {
-        $categories = Category::factory(2)->create();
-        $product1 = $this->createProduct($categories, 10, 15.99);
-        $product2 = $this->createProduct($categories);
+        $categories = [$this->createCategory()];
+
+        $product1 = $this->createProduct(false, false, 5, 20, $categories[0]->id);
+        $product2 = $this->createProduct(false, false, 96, 587135);
 
         $this->get('/products/' . $product1->slug)
             ->assertStatus(200)
             ->assertSee($product1->name)
             ->assertSee($product1->price)
-            ->assertSeeText('Stock disponible: '. $product1->quantity)
+            ->assertSeeText('Stock disponible: ' . $product1->quantity)
             ->assertDontSee($product2->name)
             ->assertDontSee($product2->price)
             ->assertDontSeeText('Stock disponible: ' . $product2->quantity);
-    }
-
-
-
-    private function createProduct($categories, $quantity=5, $price=10.99)
-    {
-        $category = $categories[0];
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => false,
-            'size' => false
-        ]);
-
-        $brand = Brand::factory()->create();
-        $category->brands()->attach([$brand->id]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'quantity' => $quantity,
-            'price' => $price
-        ]);
-        Image::factory(2)->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class
-        ]);
-        return $product;
     }
 }

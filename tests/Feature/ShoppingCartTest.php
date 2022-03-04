@@ -18,10 +18,12 @@ use App\Http\Livewire\AddCartItemColor;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\CreateData;
 
+// test refacotrizados con trait CreateData también
 class ShoppingCartTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, CreateData;
     /** @test */
     public function a_product_without_color_can_be_added_to_shopping_cart()
     {
@@ -124,7 +126,7 @@ class ShoppingCartTest extends TestCase
     /** @test */
     public function it_is_not_possible_to_add_to_shopping_cart_a_higher_product_quantity_than_the_product_has()
     {
-        $quantity=2;
+        $quantity = 2;
         $product = $this->createProduct(false, false, $quantity);
         $this->get('products/' . $product->slug);
 
@@ -147,46 +149,5 @@ class ShoppingCartTest extends TestCase
             ->assertStatus(200)
             ->assertDontSeeText('Stock disponible: ' . $product2->quantity)
             ->assertSeeText('Stock disponible: ' . $product->quantity);
-    }
-
-
-    private function createProduct($color = false, $size = false, $quantity = 5)
-    {
-        $category = Category::factory()->create();
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size
-        ]);
-
-        $brand = Brand::factory()->create();
-        $category->brands()->attach($brand->id);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-            'quantity' => $quantity
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class
-        ]);
-
-        if ($size && $color) {
-            $product->quantity = null;
-            $productColor = Color::factory()->create();
-            $productSize = Size::factory()->create([
-                'product_id' => $product->id
-            ]);
-            $productSize->colors()->attach($productColor->id, ['quantity' => 1]);
-        } elseif ($color && !$size) {
-            $product->quantity = null;
-            $productColor = Color::factory()->create();
-            $product->colors()->attach($productColor->id, ['quantity' => 1]);
-        }
-
-        return $product;
     }
 }

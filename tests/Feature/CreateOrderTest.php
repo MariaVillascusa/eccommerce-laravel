@@ -23,10 +23,12 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\CreateData;
 
+// 8 test de esta clase utilizan el trait CreateData
 class CreateOrderTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, CreateData;
 
     /** @test */
     public function a_not_authenticated_user_cannot_create_an_order()
@@ -142,7 +144,7 @@ class CreateOrderTest extends TestCase
             ->call('create_order');
 
         $this->assertDatabaseHas('products', [
-            'quantity' => 14
+            'quantity' => 4
         ]);
     }
     /** @test */
@@ -162,9 +164,9 @@ class CreateOrderTest extends TestCase
             ->set('phone', '611111111')
             ->call('create_order');
 
-        $this->assertEquals($product->stock, 0);
+        $this->assertEquals($product->stock, 4);
         $this->assertDatabaseHas('color_product', [
-            'quantity' => 0
+            'quantity' => 4
         ]);
     }
 
@@ -186,9 +188,9 @@ class CreateOrderTest extends TestCase
             ->set('phone', '611111111')
             ->call('create_order');
 
-        $this->assertEquals($product->stock, 0);
+        $this->assertEquals($product->stock, 4);
         $this->assertDatabaseHas('color_size', [
-            'quantity' => 0
+            'quantity' => 4
         ]);
     }
 
@@ -227,44 +229,5 @@ class CreateOrderTest extends TestCase
 
         $this->assertEquals($order1Before->status, 5);
         $this->assertEquals($order2Before->status, 1);
-    }
-
-
-    private function createProduct($color = false, $size = false)
-    {
-        $category = Category::factory()->create();
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size
-        ]);
-
-        $brand = Brand::factory()->create();
-        $category->brands()->attach($brand->id);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'brand_id' => $brand->id,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class
-        ]);
-
-        if ($size && $color) {
-            $product->quantity = null;
-            $productColor = Color::factory()->create();
-            $productSize = Size::factory()->create([
-                'product_id' => $product->id
-            ]);
-            $productSize->colors()->attach($productColor->id, ['quantity' => 1]);
-        } elseif ($color && !$size) {
-            $product->quantity = null;
-            $productColor = Color::factory()->create();
-            $product->colors()->attach($productColor->id, ['quantity' => 1]);
-        }
-        return $product;
     }
 }

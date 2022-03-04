@@ -8,20 +8,17 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
+use Tests\CreateData;
 use Tests\TestCase;
 
 class ListCategoriesTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
+    use RefreshDatabase, CreateData;
 
     /** @test */
     public function displays_the_navigation_component()
     {
-        $categories = $this->getCategories();
+        $categories = [$this->createCategory()];
 
         $response = $this->get('/',);
 
@@ -32,28 +29,18 @@ class ListCategoriesTest extends TestCase
     /** @test */
     public function it_shows_categories_list()
     {
-
-
-        $categories = $this->getCategories();
+        $category1=$this->createCategory();
+        $category2=$this->createCategory();
+        $categories = [$category1, $category2];
 
         $this->NavigationComponent()
             ->assertStatus(200)
-            ->assertSee('Moda')
-            ->assertSee('Informática');
+            ->assertSee($category1->name)
+            ->assertSee($category2->name);
     }
-
 
     public function NavigationComponent()
     {
         return Livewire::test(Navigation::class);
-    }
-
-    public function getCategories()
-    {
-        return [Category::factory()->create([
-            'name' => 'Moda',
-        ]), Category::factory()->create([
-            'name' => 'Informática',
-        ])];
     }
 }
